@@ -11,14 +11,12 @@
 // entirely and just use numbers.
 enum layer_number {
     _QWERTY = 0,
-    _FN,
-    _ADJ
+    _FN
 };
 
 // Keycode defines for layers
 #define QWERTY   DF(_QWERTY)
 #define FN       MO(_FN)
-#define ADJ      MO(_ADJ)
 
 enum custom_keycodes {
   RGBRST = SAFE_RANGE,
@@ -35,72 +33,48 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    * |------+------+------+------+------+------|------|  |------|------+------+------+------+------+------|
    * | Tab  |   Q  |   W  |   E  |   R  |   T  |   [  |  |   ]  |   Y  |   U  |   I  |   O  |   P  |  \|  |
    * |------+------+------+------+------+------|------|  |------|------+------+------+------+------+------|
-   * | FN   |   A  |   S  |   D  |   F  |   G  |   (  |  |   )  |   H  |   J  |   K  |   L  |   ;  |Enter |
+   * | FN   |   A  |   S  |   D  |   F  |   G  |      |  |      |   H  |   J  |   K  |   L  |   ;  |Enter |
    * |------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-   * |Shift |   Z  |   X  |   C  |   V  |   B  |   {  |  |   }  |   N  |   M  |   ,  |   .  |   /  |Shift |
+   * |Shift |   Z  |   X  |   C  |   V  |   B  |      |  |      |   N  |   M  |   ,  |   .  |   /  |Shift |
    * |------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-   * | Ctrl |  Win |  Alt |  RGB | ADJ  | LALT |      |  |      | RALT |  '"  |  -_  | Down | Up   |Right |
-   * |------+------+------+------+------+------+ SPACE|  | BKSPC+------+------+------+------+------+------'
-   *                                    | LGUI |      |  |      | RGUI |
+   * | Ctrl |  RGB |      |  ALT | CTRL |      | LALT |  | MUTE |      |  '"  |  -_  |  FN  | ALT  | Play |
+   * |------+------+------+------+------+-SPACE+------|  |------+-BKSPC+------+------+------+------+------'
+   *                                    |      | LGUI |  | RGUI |      |
    *                                    `-------------'  `-------------'
    */
   [_QWERTY] = LAYOUT( \
     KC_GESC,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5, KC_MINS,  KC_EQL,    KC_6,    KC_7,       KC_8,    KC_9,    KC_0, KC_EQL, \
      KC_TAB,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T, KC_LBRC, KC_RBRC,    KC_Y,    KC_U,       KC_I,    KC_O,    KC_P, KC_BSLS, \
-         FN,    KC_A,    KC_S,    KC_D,    KC_F,    KC_G, KC_LPRN, KC_RPRN,    KC_H,    KC_J,       KC_K,    KC_L, KC_SCLN, KC_ENT, \
-    KC_LSFT,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B, KC_LCBR, KC_RCBR,    KC_N,    KC_M,    KC_COMM,  KC_DOT, KC_SLSH, KC_RSFT, \
-    KC_LCTL,     ADJ, KC_LALT, RGB_TOG, KC_LCTL, KC_LALT, KC_SPC,  KC_BSPC, KC_RALT,    KC_QUOT, KC_MINS,      FN,   KC_UP, KC_RIGHT, \
-                                                 KC_LGUI, KC_SPC,  KC_BSPC, KC_RGUI \
-	),
+         FN,    KC_A,    KC_S,    KC_D,    KC_F,    KC_G, _______, _______,    KC_H,    KC_J,       KC_K,    KC_L, KC_SCLN, KC_ENT, \
+    KC_LSFT,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B, _______, _______,    KC_N,    KC_M,    KC_COMM,  KC_DOT, KC_SLSH, KC_RSFT, \
+    KC_LCTL, RGB_TOG, _______, KC_LALT, KC_LCTL,  KC_SPC, KC_LALT, KC_MUTE, KC_BSPC,    KC_QUOT, KC_MINS,      FN, KC_RALT, KC_MPLY, \
+                                                  KC_SPC, KC_LGUI, KC_RGUI, KC_BSPC \
+    ),
 
   /* FN
    * ,------------------------------------------------.  ,------------------------------------------------.
-   * | GESC |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |  |  F7  |  F8  |  F9  |  F10 |  F11 |  F12 |BKSPC |
+   * | GESC |  F1  |  F2  |  F3  |  F4  |  F5  |  F11 |  |  F12 |  F6  |  F7  |   F8 |   F9 |  F10 |DELETE|
    * |------+------+------+------+------+------|------|  |------|------+------+------+------+------+------|
-   * |      | PGDN |  UP  | PGUP |      |      |      |  |      |      | PGDN |  UP  | PGUP | PRINT| HOME |
+   * |      | PGDN |  UP  | PGUP |      |      | RESET|  | RESET| SLOCK|   [  |   ]  | PGUP | PRINT| HOME |
    * |------+------+------+------+------+------|------|  |------|------+------+------+------+------+------|
-   * |      | LEFT | DOWN | RIGHT|      |      |      |  |      |      | LEFT | DOWN | RIGHT|INSERT| END  |
+   * |      | LEFT | DOWN | RIGHT|      |      |      |  |      | NLOCK|   {  |   }  | RIGHT|INSERT| END  |
    * |------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
    * |      |      |      |      |      |      |      |  |      |      |      |      |      |      |      |
    * |------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-   * |      |      |      |RGBMOD|      |      |      |  |      |      | PLAY | NEXT | MUTE | VOL- | VOL+ |
+   * |      |RGBMOD|      |      |      |      |      |  |      |      |      |      |      |      |      |
    * `------+------+------+------+------+------+------|  |------+------+------+------+------+------+------'
-   *                                    |      |      |  |      |      |
+   *                                    |      |      |  |      | SPACE|
    *                                    `-------------'  `-------------'
    */
   [_FN] = LAYOUT( \
-    KC_GESC,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,  KC_F11,  KC_F12,   KC_F6,   KC_F7,  KC_F8,  KC_F9,  KC_F10, KC_BSPC, \
-    KC_CAPS, KC_PGDN,   KC_UP, KC_PGUP, _______,   RESET, _______, KC_SLCK, _______, KC_PGDN,   KC_UP, KC_PGUP, KC_PSCR, KC_HOME, \
-    _______, KC_LEFT, KC_DOWN, KC_RGHT, _______, _______, _______, KC_NLCK, _______, KC_LEFT, KC_DOWN, KC_RGHT,  KC_INS,  KC_END, \
+    KC_GESC,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,  KC_F11,  KC_F12,   KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10,  KC_DEL, \
+    KC_CAPS, KC_PGDN,   KC_UP, KC_PGUP, _______, _______,   RESET,   RESET, KC_SLCK, KC_LBRC, KC_RBRC, _______, KC_PSCR, KC_HOME, \
+    _______, KC_LEFT, KC_DOWN, KC_RGHT, _______, _______, _______, _______, KC_NLCK, KC_LCBR, KC_RCBR, _______,  KC_INS,  KC_END, \
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
-    _______, _______, _______, RGB_MOD, _______, _______,  KC_ENT, _______, _______, KC_MPLY, KC_MNXT, KC_MUTE, KC_VOLD, KC_VOLU, \
-                                                 KC_BSPC,  KC_ENT, _______, _______ \
-  ),
-
-  /* ADJ
-   * ,------------------------------------------------.  ,------------------------------------------------.
-   * |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |      |  |      |  F7  |  F8  |  F9  |  F10 |  F11 |  F12 |
-   * |------+------+------+------+------+------|------|  |------|------+------+------+------+------+------|
-   * |      | SAD  | VAI  | SAI  | RESET|      |      |  |      |      |      |      |      |      |      |
-   * |------+------+------+------+------+------|------|  |------|------+------+------+------+------+------|
-   * |      | HUD  | VAD  | HUI  |RGBRST|      |      |  |      |      |QWERTY|      |      |      |      |
-   * |------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-   * |      | SPD  |      | SPI  |      |      |      |  |      |      |      |RGBTOG|  HUI |  SAI | VAI  |
-   * |------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-   * |      |      |      |RGBMOD|      |      |      |  |      |      |     |RGBRMOD| HUD |  SAD | VAD  |
-   * `------+------+------+------+------+------+------|  |------+------+------+------+------+------+------'
-   *                                    |      |      |  |      |      |
-   *                                    `-------------'  `-------------'
-   */
-
-  [_ADJ] =  LAYOUT( \
-      KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6, _______, _______,   KC_F7,   KC_F8,   KC_F9,  KC_F10,  KC_F11,  KC_F12, \
-    _______, RGB_SAD, RGB_VAI, RGB_SAI,   RESET, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
-    _______, RGB_HUD, RGB_VAD, RGB_HUI,  RGBRST, _______, _______, _______, _______,  QWERTY, _______, _______, _______, _______, \
-    _______, RGB_SPD, _______, RGB_SPI, _______, _______, _______, _______, _______, RGB_SPI, RGB_TOG, RGB_HUI, RGB_SAI, RGB_VAI, \
-    _______, _______, _______, RGB_MOD, _______, _______, _______, _______, _______, RGB_SPD, RGB_RMOD,RGB_HUD, RGB_SAD, RGB_VAD, \
-                                                 _______, _______, _______, _______ \
+    _______, RGB_MOD, _______, _______, _______, _______, KC_MUTE, _______, _______, _______, _______, _______, _______, _______, \
+                                                 KC_BSPC,  KC_ENT, _______, KC_SPC \
   )
+
 };
 
 // For RGBRST Keycode
@@ -175,44 +149,29 @@ const rgb_matrix_f rgb_matrix_functions[6][2] = {
 
 #ifdef ENCODER_ENABLE
 
-static pin_t encoders_pad_a[] = ENCODERS_PAD_A;
-#define NUMBER_OF_ENCODERS (sizeof(encoders_pad_a)/sizeof(pin_t))
-
-const uint16_t PROGMEM encoders[][NUMBER_OF_ENCODERS * 2][2]  = {
-    [_QWERTY] = ENCODER_LAYOUT( \
-        KC_VOLU, KC_VOLD,
-        KC_VOLU, KC_VOLD
-    ),
-    [_FN] = ENCODER_LAYOUT( \
-        _______, _______,
-        _______, _______
-    ),
-    [_ADJ] = ENCODER_LAYOUT( \
-        _______, _______,
-        _______, _______
-    )
-};
+static bool fn_down = false;
 
 void encoder_update_user(uint8_t index, bool clockwise) {
-  if (!is_keyboard_master())
-    return;
-
-#ifdef RGB_OLED_MENU
-  if (index == RGB_OLED_MENU) {
-    (*rgb_matrix_functions[rgb_encoder_state][clockwise])();
-  } else
-#endif
-  {
-    uint8_t layer = biton32(layer_state);
-    uint16_t keycode = pgm_read_word(&encoders[layer][index][clockwise]);
-    while (keycode == KC_TRANSPARENT && layer > 0)
-    {
-      layer--;
-      if ((layer_state & (1 << layer)) != 0)
-          keycode = pgm_read_word(&encoders[layer][index][clockwise]);
+  if (index == 0) { /* Left encoder */
+    if (clockwise) {
+      tap_code(KC_UP);
+    } else {
+      tap_code(KC_DOWN);
     }
-    if (keycode != KC_TRANSPARENT)
-      tap_code16(keycode);
+  } else if (index == 1) { /* Right encoder*/
+    if (!fn_down) {
+      if (clockwise) {
+        tap_code(KC_VOLD);
+      } else {
+        tap_code(KC_VOLU);
+      }
+    } else {
+      if (clockwise) {
+        tap_code(KC_UP);
+      } else {
+        tap_code(KC_DOWN);
+      }
+    }
   }
 }
 #endif
@@ -220,6 +179,14 @@ void encoder_update_user(uint8_t index, bool clockwise) {
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   static uint16_t reset_timer;
   switch (keycode) {
+    case FN:
+      if (record->event.pressed) {
+        fn_down = true;
+      } else {
+        fn_down = false;
+      }
+      return true;
+
     case RGBRST:
 #if defined(RGBLIGHT_ENABLE)
         if (record->event.pressed) {
@@ -301,9 +268,6 @@ static void render_status(void) {
       break;
     case _FN:
       oled_write_P(PSTR("FN   "), false);
-      break;
-    case _ADJ:
-      oled_write_P(PSTR("ADJ  "), false);
       break;
     default:
       oled_write_P(PSTR("UNDEF"), false);
