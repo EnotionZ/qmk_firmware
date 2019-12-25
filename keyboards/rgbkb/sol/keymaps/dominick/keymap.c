@@ -11,11 +11,13 @@
 // entirely and just use numbers.
 enum layer_number {
     _QWERTY = 0,
+    _GUISWAP,
     _FN
 };
 
 // Keycode defines for layers
 #define QWERTY   DF(_QWERTY)
+#define GUISWAP  TG(_GUISWAP)
 #define FN       MO(_FN)
 
 enum custom_keycodes {
@@ -37,18 +39,30 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    * |------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
    * |Shift |   Z  |   X  |   C  |   V  |   B  |      |  |      |   N  |   M  |   ,  |   .  |   /  |Shift |
    * |------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-   * | Ctrl |  RGB |      |  ALT | CTRL |      | RGBM |  | MUTE |      |  '"  |  -_  |  FN  | ALT  | Play |
+   * | Ctrl |  RGB |      |  ALT | CTRL |      |      |  | MUTE |      |  '"  |  -_  |  FN  | ALT  | Play |
    * |------+------+------+------+------+-SPACE+------|  |------+-BKSPC+------+------+------+------+------'
    *                                    |      | LGUI |  | RGUI |      |
    *                                    `-------------'  `-------------'
    */
   [_QWERTY] = LAYOUT( \
-    KC_GESC,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,  KC_MINS,  KC_EQL,    KC_6,    KC_7,       KC_8,    KC_9,    KC_0, KC_EQL, \
-     KC_TAB,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,  KC_LBRC, KC_RBRC,    KC_Y,    KC_U,       KC_I,    KC_O,    KC_P, KC_BSLS, \
-         FN,    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,  _______, _______,    KC_H,    KC_J,       KC_K,    KC_L, KC_SCLN, KC_ENT, \
-    KC_LSFT,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,  _______, _______,    KC_N,    KC_M,    KC_COMM,  KC_DOT, KC_SLSH, KC_RSFT, \
-    KC_LCTL, RGB_TOG, _______, KC_LALT, KC_LCTL,  KC_SPC, RGB_MENU, KC_MUTE, KC_BSPC,    KC_QUOT, KC_MINS,      FN, KC_RALT, KC_MPLY, \
-                                                  KC_SPC,  KC_LGUI, KC_RGUI, KC_BSPC \
+    KC_GESC,    KC_1,    KC_2,    KC_3,    KC_4,   KC_5, KC_MINS,  KC_EQL,    KC_6,    KC_7,       KC_8,    KC_9,    KC_0, KC_EQL, \
+     KC_TAB,    KC_Q,    KC_W,    KC_E,    KC_R,   KC_T, KC_LBRC, KC_RBRC,    KC_Y,    KC_U,       KC_I,    KC_O,    KC_P, KC_BSLS, \
+         FN,    KC_A,    KC_S,    KC_D,    KC_F,   KC_G, _______, _______,    KC_H,    KC_J,       KC_K,    KC_L, KC_SCLN, KC_ENT, \
+    KC_LSFT,    KC_Z,    KC_X,    KC_C,    KC_V,   KC_B, _______, _______,    KC_N,    KC_M,    KC_COMM,  KC_DOT, KC_SLSH, KC_RSFT, \
+    KC_LCTL, RGB_TOG, _______, KC_LALT, KC_LCTL, KC_SPC, _______, KC_MUTE, KC_BSPC,    KC_QUOT, KC_MINS,      FN, KC_RALT, KC_MPLY, \
+                                                 KC_SPC, KC_LGUI, KC_RGUI, KC_BSPC \
+    ),
+
+  /* GUISWAP
+   * Swap the left GUI and ALT keys (useful for switching between OSX and Windows, or while gaming to avoid minimize
+   */
+  [_GUISWAP] = LAYOUT( \
+    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
+    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
+    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
+    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
+    _______, _______, _______, KC_LGUI, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
+                                                 _______, KC_LALT, _______, _______ \
     ),
 
   /* FN
@@ -71,7 +85,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_CAPS, KC_PGDN,   KC_UP, KC_PGUP, _______, _______,   RESET,   RESET, KC_SLCK, KC_LBRC, KC_RBRC, _______, KC_PSCR, KC_HOME, \
     _______, KC_LEFT, KC_DOWN, KC_RGHT, _______, _______, _______, _______, KC_NLCK, KC_LCBR, KC_RCBR, _______,  KC_INS,  KC_END, \
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
-    _______, RGB_MOD, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
+    _______, RGB_MOD, _______, _______, _______, _______, GUISWAP, _______, _______, _______, _______, _______, _______, _______, \
                                                  KC_BSPC,  KC_ENT, _______, KC_SPC \
   )
 
