@@ -37,18 +37,18 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    * |------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
    * |Shift |   Z  |   X  |   C  |   V  |   B  |      |  |      |   N  |   M  |   ,  |   .  |   /  |Shift |
    * |------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-   * | Ctrl |  RGB |      |  ALT | CTRL |      | LALT |  | MUTE |      |  '"  |  -_  |  FN  | ALT  | Play |
+   * | Ctrl |  RGB |      |  ALT | CTRL |      | RGBM |  | MUTE |      |  '"  |  -_  |  FN  | ALT  | Play |
    * |------+------+------+------+------+-SPACE+------|  |------+-BKSPC+------+------+------+------+------'
    *                                    |      | LGUI |  | RGUI |      |
    *                                    `-------------'  `-------------'
    */
   [_QWERTY] = LAYOUT( \
-    KC_GESC,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5, KC_MINS,  KC_EQL,    KC_6,    KC_7,       KC_8,    KC_9,    KC_0, KC_EQL, \
-     KC_TAB,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T, KC_LBRC, KC_RBRC,    KC_Y,    KC_U,       KC_I,    KC_O,    KC_P, KC_BSLS, \
-         FN,    KC_A,    KC_S,    KC_D,    KC_F,    KC_G, _______, _______,    KC_H,    KC_J,       KC_K,    KC_L, KC_SCLN, KC_ENT, \
-    KC_LSFT,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B, _______, _______,    KC_N,    KC_M,    KC_COMM,  KC_DOT, KC_SLSH, KC_RSFT, \
-    KC_LCTL, RGB_TOG, _______, KC_LALT, KC_LCTL,  KC_SPC, KC_LALT, KC_MUTE, KC_BSPC,    KC_QUOT, KC_MINS,      FN, KC_RALT, KC_MPLY, \
-                                                  KC_SPC, KC_LGUI, KC_RGUI, KC_BSPC \
+    KC_GESC,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,  KC_MINS,  KC_EQL,    KC_6,    KC_7,       KC_8,    KC_9,    KC_0, KC_EQL, \
+     KC_TAB,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,  KC_LBRC, KC_RBRC,    KC_Y,    KC_U,       KC_I,    KC_O,    KC_P, KC_BSLS, \
+         FN,    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,  _______, _______,    KC_H,    KC_J,       KC_K,    KC_L, KC_SCLN, KC_ENT, \
+    KC_LSFT,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,  _______, _______,    KC_N,    KC_M,    KC_COMM,  KC_DOT, KC_SLSH, KC_RSFT, \
+    KC_LCTL, RGB_TOG, _______, KC_LALT, KC_LCTL,  KC_SPC, RGB_MENU, KC_MUTE, KC_BSPC,    KC_QUOT, KC_MINS,      FN, KC_RALT, KC_MPLY, \
+                                                  KC_SPC,  KC_LGUI, KC_RGUI, KC_BSPC \
     ),
 
   /* FN
@@ -71,7 +71,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_CAPS, KC_PGDN,   KC_UP, KC_PGUP, _______, _______,   RESET,   RESET, KC_SLCK, KC_LBRC, KC_RBRC, _______, KC_PSCR, KC_HOME, \
     _______, KC_LEFT, KC_DOWN, KC_RGHT, _______, _______, _______, _______, KC_NLCK, KC_LCBR, KC_RCBR, _______,  KC_INS,  KC_END, \
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
-    _______, RGB_MOD, _______, _______, _______, _______, KC_MUTE, _______, _______, _______, _______, _______, _______, _______, \
+    _______, RGB_MOD, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
                                                  KC_BSPC,  KC_ENT, _______, KC_SPC \
   )
 
@@ -152,11 +152,18 @@ const rgb_matrix_f rgb_matrix_functions[6][2] = {
 static bool fn_down = false;
 
 void encoder_update_user(uint8_t index, bool clockwise) {
+
   if (index == 0) { /* Left encoder */
-    if (clockwise) {
-      tap_code(KC_UP);
+    if (!fn_down) {
+      if (clockwise) {
+        tap_code(KC_UP);
+      } else {
+        tap_code(KC_DOWN);
+      }
     } else {
-      tap_code(KC_DOWN);
+#ifdef RGB_OLED_MENU
+      (*rgb_matrix_functions[rgb_encoder_state][clockwise])();
+#endif
     }
   } else if (index == 1) { /* Right encoder*/
     if (!fn_down) {
@@ -217,6 +224,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 #endif
     case RGB_MENU:
 #ifdef RGB_OLED_MENU
+      // for encoder to advance to next option
       if (record->event.pressed) {
         if (get_mods() & MOD_MASK_SHIFT) {
           rgb_encoder_state = (rgb_encoder_state - 1);
@@ -228,7 +236,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
       }
 #endif
-      return false;
+      return true;
   }
   return true;
 }
