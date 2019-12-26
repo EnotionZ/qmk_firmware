@@ -169,29 +169,18 @@ void encoder_update_user(uint8_t index, bool clockwise) {
 
   if (index == 0) { /* Left encoder */
     if (!fn_down) {
-      if (clockwise) {
-        tap_code(KC_UP);
-      } else {
-        tap_code(KC_DOWN);
-      }
+      tap_code(clockwise ? KC_UP : KC_DOWN);
     } else {
-#ifdef RGB_OLED_MENU
-      (*rgb_matrix_functions[rgb_encoder_state][clockwise])();
-#endif
+      tap_code(clockwise ? KC_BRIGHTNESS_DOWN : KC_BRIGHTNESS_UP);
+/* #ifdef RGB_OLED_MENU */
+/*       (*rgb_matrix_functions[rgb_encoder_state][clockwise])(); */
+/* #endif */
     }
   } else if (index == 1) { /* Right encoder*/
     if (!fn_down) {
-      if (clockwise) {
-        tap_code(KC_VOLD);
-      } else {
-        tap_code(KC_VOLU);
-      }
+      tap_code(clockwise ? KC_VOLD : KC_VOLU);
     } else {
-      if (clockwise) {
-        tap_code(KC_UP);
-      } else {
-        tap_code(KC_DOWN);
-      }
+      tap_code(clockwise ? KC_UP : KC_DOWN);
     }
   }
 }
