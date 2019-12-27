@@ -27,11 +27,11 @@ RGB_MATRIX_KEYPRESSES   = no        # Enable reactive per-key effects.
 RGB_MATRIX_FRAMEBUFFER_EFFECTS = no # Enable frame buffer effects like the typing heatmap.
 
 RGBLIGHT_FULL_POWER     = no        # Allow maximum RGB brightness for RGBLIGHT or RGB_MATRIX. Otherwise, limited to a safe level for a normal USB-A port
-FULLHAND_ENABLE         = no       # Enables the additional 24 Full Hand LEDs
+FULLHAND_ENABLE         = no        # Enables the additional 24 Full Hand LEDs
 IOS_DEVICE_ENABLE       = no        # Limit max brightness to connect to IOS device (iPad,iPhone)
 
 # Misc
-OLED_DRIVER_ENABLE      = no        # Enable the OLED Driver
+OLED_DRIVER_ENABLE      = yes       # Enable the OLED Driver
 EXTRA_ENCODERS_ENABLE   = no        # Enables 3 encoders per side (up from 1, not compatible with OLED_DRIVER_ENABLE)
 SWAP_HANDS_ENABLE       = no        # Enable one-hand typing
 LINK_TIME_OPTIMIZATION_ENABLE = yes # Enable Link Time Optimizations greatly reducing firmware size by disabling the old Macros and Functions features
