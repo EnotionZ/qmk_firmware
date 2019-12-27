@@ -280,6 +280,9 @@ static void render_status(void) {
     case _FN:
       oled_write_P(PSTR("FN   "), false);
       break;
+    case _GUISWAP:
+      oled_write_P(PSTR("GUISW"), false);
+      break;
     default:
       oled_write_P(PSTR("UNDEF"), false);
   }
