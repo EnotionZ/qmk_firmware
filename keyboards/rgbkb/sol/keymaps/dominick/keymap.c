@@ -309,7 +309,7 @@ void oled_task_user(void) {
     render_status();
   } else {
     render_logo();
-    oled_scroll_left();
+    //oled_scroll_left();
   }
 }
 
