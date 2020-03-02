@@ -47,7 +47,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_QWERTY] = LAYOUT( \
     KC_GESC,    KC_1,   KC_2,    KC_3,    KC_4,   KC_5, KC_MINS,  KC_EQL,    KC_6,    KC_7,       KC_8,    KC_9,    KC_0, KC_EQL, \
      KC_TAB,    KC_Q,   KC_W,    KC_E,    KC_R,   KC_T, KC_LBRC, KC_RBRC,    KC_Y,    KC_U,       KC_I,    KC_O,    KC_P, KC_BSLS, \
-         FN,    KC_A,   KC_S,    KC_D,    KC_F,   KC_G, _______,      FN,    KC_H,    KC_J,       KC_K,    KC_L, KC_SCLN, KC_ENT, \
+         FN,    KC_A,   KC_S,    KC_D,    KC_F,   KC_G,      FN,      FN,    KC_H,    KC_J,       KC_K,    KC_L, KC_SCLN, KC_ENT, \
     KC_LSFT,    KC_Z,   KC_X,    KC_C,    KC_V,   KC_B, _______, _______,    KC_N,    KC_M,    KC_COMM,  KC_DOT, KC_SLSH, KC_RSFT, \
     KC_LCTL, RGB_TOG, KC_DEL, KC_LALT, KC_LCTL, KC_SPC, _______, KC_MUTE, KC_BSPC,    KC_QUOT, KC_MINS,      FN, KC_RALT, KC_RCTL, \
                                                  KC_SPC, KC_LGUI, KC_RGUI, KC_BSPC \
@@ -146,7 +146,6 @@ void rgb_matrix_decrease_flags(void)
 }
 #endif
 
-#ifdef RGB_OLED_MENU
 uint8_t rgb_encoder_state = 4;
 
 typedef void (*rgb_matrix_f)(void);
@@ -159,7 +158,6 @@ const rgb_matrix_f rgb_matrix_functions[6][2] = {
     { rgb_matrix_step, rgb_matrix_step_reverse },
     { rgb_matrix_increase_flags, rgb_matrix_decrease_flags }
 };
-#endif
 
 #ifdef ENCODER_ENABLE
 
@@ -168,17 +166,20 @@ static bool fn_down = false;
 void encoder_update_user(uint8_t index, bool clockwise) {
 
   if (index == 0) { /* Left encoder */
-    if (!fn_down) {
-      tap_code(clockwise ? KC_BRIGHTNESS_DOWN : KC_BRIGHTNESS_UP);
+    uint8_t layer = layer_state ? biton(layer_state) : biton32(default_layer_state);
+    bool isMac = layer != _GUISWAP;
+
+    if(fn_down) {
+      (*rgb_matrix_functions[rgb_encoder_state][clockwise])();
     } else {
-      // brightness second monitor mac
-      register_code(KC_RCTL);
-      tap_code(clockwise ? KC_F1 : KC_F2);
-      unregister_code(KC_RCTL);
-/* #ifdef RGB_OLED_MENU */
-/*       (*rgb_matrix_functions[rgb_encoder_state][clockwise])(); */
-/* #endif */
+      if(isMac) {
+        // scroll lock and pause controls brightness for active display on Mac
+        tap_code(clockwise ? KC_SCROLLLOCK : KC_PAUSE);
+      } else {
+        tap_code(clockwise ? KC_BRIGHTNESS_DOWN : KC_BRIGHTNESS_UP);
+      }
     }
+
   } else if (index == 1) { /* Right encoder*/
     if (!fn_down) {
       tap_code(clockwise ? KC_VOLD : KC_VOLU);
