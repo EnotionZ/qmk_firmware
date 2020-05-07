@@ -10,8 +10,8 @@ extern keymap_config_t keymap_config;
 #define _FN1 1
 
 enum custom_keycodes {
-  QWERTY = SAFE_RANGE,
   PWD = SAFE_RANGE,
+  PWDAA,
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -27,7 +27,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_GRV, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_PSCR,  KC_INSERT, \
     KC_CAPS, _______, KC_UP, _______,   _______, _______, _______, _______, _______, _______, _______, _______, _______, RGB_TOG, \
     _______, KC_LEFT, KC_DOWN, KC_RGHT, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
-    _______, _______, _______, _______, _______,     PWD, _______, _______, _______, _______, _______, _______, _______, \
+    _______, _______, _______, _______,   PWDAA,     PWD, _______, _______, _______, _______, _______, _______, _______, \
     _______, _______, _______, KC_BSPC, KC_ENT,            KC_DEL, KC_MEDIA_PLAY_PAUSE, _______, KC_MEDIA_PREV_TRACK, KC_VOLD, KC_VOLU, KC_MEDIA_NEXT_TRACK
   )
 };
@@ -36,9 +36,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case PWD:
       if (record->event.pressed) {
-        SEND_STRING("STRING"SS_TAP(X_ENT));
+        SEND_STRING("foo"SS_TAP(X_ENT));
       } else {
         // when keycode is released
+      }
+      break;
+    case PWDAA:
+      if (record->event.pressed) {
+        SEND_STRING("bar"SS_TAP(X_ENT));
       }
       break;
 
