@@ -82,9 +82,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * `-----------------------------------------------------------------------------------'
  */
 [_FUNCTION] = LAYOUT_ortho_4x12(
-  KC_GRV,   _______,   KC_UP,  _______, _______, _______, _______, _______, _______, _______, KC_PSCR, KC_INSERT,
-  _______,  KC_LEFT, KC_DOWN, KC_RIGHT, _______, _______, _______, KC_LBRC, KC_RBRC, _______, _______, _______,
-  KC_CAPS,  _______, _______,  _______, _______, _______, _______, _______, _______, _______, _______, _______,
+  KC_GRV,   _______,   KC_UP,  _______, _______, _______, _______, KC_LBRC, KC_RBRC, _______, KC_PSCR, KC_INSERT,
+  _______,  KC_LEFT, KC_DOWN, KC_RIGHT, _______, _______, _______, KC_LCBR, KC_RCBR, _______, _______, _______,
+  KC_CAPS,  _______, _______,  _______, _______, _______, _______, KC_MINS,  KC_EQL, _______, _______, _______,
   _______,    RESET, _______,   KC_DEL, KC_BSPC, KC_ENT,  _______, _______, _______, _______, _______, _______
 )
 
@@ -106,4 +106,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       break;
   }
   return true;
+};
+
+// https://github.com/qmk/qmk_firmware/blob/master/docs/feature_rgblight.md
+void matrix_init_user(void) { // Runs boot tasks for keyboard
+  rgblight_enable();
+  rgblight_sethsv(0,255,255);
+  rgblight_mode(3);
 };
