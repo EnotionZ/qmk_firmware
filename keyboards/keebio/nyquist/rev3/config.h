@@ -80,4 +80,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //#define NO_ACTION_MACRO
 //#define NO_ACTION_FUNCTION
 
-#define TAPPING_TERM 100
+#define TAPPING_TERM 140
