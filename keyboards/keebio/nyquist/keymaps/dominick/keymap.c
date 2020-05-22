@@ -67,7 +67,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_RAISE] = LAYOUT_ortho_4x12(
   KC_GRV,  KC_EXLM,  KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_DEL,
   _______, _______, _______, _______, _______, _______, _______,  KC_LBRC, KC_RBRC, _______, _______, _______,
-  _______, _______, _______, _______, _______, _______, _______,  _______, _______, _______, _______, _______,
+  _______, _______, _______, _______, _______, _______, RGB_HUI,  RGB_SAI, RGB_VAI, RGB_MOD, RGB_TOG, _______,
   _______, _______, _______, _______, KC_BSPC,  KC_ENT,  KC_SPC,  KC_MNXT, _______, KC_VOLD, KC_VOLU, KC_MUTE
 ),
 
