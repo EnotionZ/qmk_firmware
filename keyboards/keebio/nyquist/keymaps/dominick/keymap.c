@@ -10,6 +10,7 @@ enum layer_names {
 enum custom_keycodes {
   PWD = SAFE_RANGE,
   PWDAA,
+  LT3_TAB
 };
 
 #define LT3_TAB LT(3, KC_TAB)
@@ -48,7 +49,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_LOWER] = LAYOUT_ortho_4x12(
   KC_GRV,  KC_1,  KC_2,    KC_3,   KC_4,   KC_5,    KC_6,   KC_7,    KC_8,    KC_9,    KC_0,    KC_DEL,
   _______, KC_F1, KC_F2,   KC_F3,  KC_F4,  KC_F5,   KC_F6,  KC_LBRC, KC_RBRC, _______, _______, _______,
-  _______, KC_F7, KC_F8,   KC_F9,  KC_F10, KC_F11,  KC_F12, _______, _______, _______, _______, _______,
+  _______, KC_F7, KC_F8,   KC_F9,  KC_F10, KC_F11,  KC_F12, KC_UNDS, KC_PLUS, _______, _______, _______,
   KC_ENT,  PWD,   PWDAA, _______, _______, KC_ENT, _______, _______, _______, KC_SCROLLLOCK, KC_PAUSE, _______
 ),
 
@@ -92,7 +93,22 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  //static uint16_t my_hash_timer;
+
   switch (keycode) {
+    /*
+    case LT3_TAB:
+      if(record->event.pressed) {
+        my_hash_timer = timer_read();
+        layer_on(_FUNCTION);
+      } else {
+        layer_off(_FUNCTION);
+        if (timer_elapsed(my_hash_timer) < TAPPING_TERM) {
+          tap_code(KC_TAB);
+        }
+      }
+      return false;
+      */
     case PWD:
       if (record->event.pressed) {
         SEND_STRING("foo"SS_TAP(X_ENT));
