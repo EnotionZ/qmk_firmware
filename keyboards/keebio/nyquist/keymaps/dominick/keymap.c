@@ -13,8 +13,6 @@ enum custom_keycodes {
   LT3_TAB
 };
 
-#define LT3_TAB LT(3, KC_TAB)
-
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 /* Qwerty
@@ -91,24 +89,26 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 };
 
+static bool fn_down = false;
+static uint16_t prev_keycode = 0;
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  //static uint16_t my_hash_timer;
 
   switch (keycode) {
-    /*
     case LT3_TAB:
       if(record->event.pressed) {
-        my_hash_timer = timer_read();
         layer_on(_FUNCTION);
       } else {
         layer_off(_FUNCTION);
-        if (timer_elapsed(my_hash_timer) < TAPPING_TERM) {
+
+        // previous keydown was fn/tab, perform tab
+        if (prev_keycode == LT3_TAB) {
           tap_code(KC_TAB);
         }
       }
+      fn_down = record->event.pressed;
+      prev_keycode = keycode;
       return false;
-      */
     case PWD:
       if (record->event.pressed) {
         SEND_STRING("foo"SS_TAP(X_ENT));
@@ -121,6 +121,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       break;
   }
+
+  prev_keycode = keycode;
   return true;
 };
 
