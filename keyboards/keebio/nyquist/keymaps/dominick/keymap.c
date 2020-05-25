@@ -93,17 +93,21 @@ static bool fn_down = false;
 static uint16_t prev_keycode = 0;
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  static uint16_t my_hash_timer;
 
   switch (keycode) {
     case LT3_TAB:
       if(record->event.pressed) {
         layer_on(_FUNCTION);
+        my_hash_timer = timer_read();
       } else {
         layer_off(_FUNCTION);
 
-        // previous keydown was fn/tab, perform tab
+        // previous keydown was fn/tab
         if (prev_keycode == LT3_TAB) {
-          tap_code(KC_TAB);
+          if (timer_elapsed(my_hash_timer) < TAPPING_TERM) {
+            tap_code(KC_TAB);
+          }
         }
       }
       fn_down = record->event.pressed;
