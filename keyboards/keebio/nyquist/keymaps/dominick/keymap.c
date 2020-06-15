@@ -90,29 +90,51 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 static bool fn_down = false;
-static uint16_t prev_keycode = 0;
+static bool mod_down = false;
+static uint16_t prev_keydown = 0;
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  static uint16_t my_hash_timer;
+
+  if(record->event.pressed) {
+    prev_keydown = keycode;
+  }
 
   switch (keycode) {
-    case LT3_TAB:
+    case KC_LGUI:
+    case KC_LALT:
       if(record->event.pressed) {
-        layer_on(_FUNCTION);
-        my_hash_timer = timer_read();
+        mod_down = true;
       } else {
-        layer_off(_FUNCTION);
+        mod_down = false;
+      }
+      break;
 
-        // previous keydown was fn/tab
-        if (prev_keycode == LT3_TAB) {
-          if (timer_elapsed(my_hash_timer) < TAPPING_TERM) {
+    case LT3_TAB:
+      // if modifier down, treat as tab
+      if(mod_down) {
+        if(record->event.pressed) {
+          register_code(KC_TAB);
+        } else {
+          unregister_code(KC_TAB);
+        }
+
+      // modifier is not down, treat as function
+      } else {
+        if(record->event.pressed) {
+          layer_on(_FUNCTION);
+        } else {
+          layer_off(_FUNCTION);
+
+          // previous keydown was fn/tab
+          if (prev_keydown == LT3_TAB) {
             tap_code(KC_TAB);
+            prev_keydown = keycode;
           }
         }
+        fn_down = record->event.pressed;
       }
-      fn_down = record->event.pressed;
-      prev_keycode = keycode;
-      return false;
+      break;
+
     case PWD:
       if (record->event.pressed) {
         SEND_STRING("foo"SS_TAP(X_ENT));
@@ -126,7 +148,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       break;
   }
 
-  prev_keycode = keycode;
   return true;
 };
 
