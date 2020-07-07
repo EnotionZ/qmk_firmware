@@ -1,5 +1,6 @@
 #include QMK_KEYBOARD_H
 #include "version.h"
+#include "shared.h"
 
 #define BASE 0 // default layer
 #define SYMB 1 // symbols
@@ -171,13 +172,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     case PWD:
       if (record->event.pressed) {
-        SEND_STRING("foo"SS_TAP(X_ENT));
+        SEND_STRING(CPWD1P SS_TAP(X_ENT));
       }
       return true;
 
     case PWDAA:
       if (record->event.pressed) {
-        SEND_STRING("bar"SS_TAP(X_ENT));
+        SEND_STRING(CPWDAA SS_TAP(X_ENT));
       }
       return true;
   }

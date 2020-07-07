@@ -1,4 +1,5 @@
 #include QMK_KEYBOARD_H
+#include "shared.h"
 
 enum layer_names {
     _QWERTY,
@@ -137,13 +138,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     case PWD:
       if (record->event.pressed) {
-        SEND_STRING("foo"SS_TAP(X_ENT));
+        SEND_STRING(CPWD1P SS_TAP(X_ENT));
       }
       break;
 
     case PWDAA:
       if (record->event.pressed) {
-        SEND_STRING("bar");
+        SEND_STRING(CPWDAA SS_TAP(X_ENT));
       }
       break;
   }
