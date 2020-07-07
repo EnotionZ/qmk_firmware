@@ -1,4 +1,5 @@
 #include QMK_KEYBOARD_H
+#include "shared.h"
 
 #ifdef PROTOCOL_LUFA
 #include "lufa.h"
@@ -197,13 +198,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case PWD:
       if (record->event.pressed) {
-        SEND_STRING("foo"SS_TAP(X_ENT));
+        SEND_STRING(CPWD1P SS_TAP(X_ENT));
       }
       return true;
 
     case PWDAA:
       if (record->event.pressed) {
-        SEND_STRING("bar"SS_TAP(X_ENT));
+        SEND_STRING(CPWDAA SS_TAP(X_ENT));
       }
       return true;
 
