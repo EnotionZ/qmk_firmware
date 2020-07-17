@@ -40,6 +40,7 @@ LINK_TIME_OPTIMIZATION_ENABLE = yes # Enable Link Time Optimizations greatly red
 RGB_OLED_MENU           = no        # Enabled by setting this to the encoder index (0-5) you wish to use to control the menu.
                                     # Use the RGB_MENU keycode in the keymap for the encoder to advance the menu to the next option.
 
+VELOCIKEY_ENABLE        = yes # increase and decrease the RGB animation speed based on keyboard activity (typing)
 
 
 # Do not edit past here

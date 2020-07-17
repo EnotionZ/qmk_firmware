@@ -24,8 +24,9 @@ enum layer_number {
 enum custom_keycodes {
   RGBRST = SAFE_RANGE,
   RGB_MENU,
-  PWD,
-  PWDAA
+  PWD1P,
+  PWDAA,
+  PWDME
 };
 
 #define FN_ESC   LT(_FN, KC_ESC)
@@ -87,7 +88,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      KC_GRV,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,  KC_F11,  KC_F12,   KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10,  KC_DEL, \
     KC_CAPS, KC_PGDN,   KC_UP, KC_PGUP, _______, _______,   RESET,   RESET, KC_SLCK, KC_LBRC, KC_RBRC, _______, KC_PSCR, KC_HOME, \
     _______, KC_LEFT, KC_DOWN, KC_RGHT, _______, _______, _______, _______, KC_NLCK, KC_LCBR, KC_RCBR, _______,  KC_INS,  KC_END, \
-    _______, _______, _______, _______,   PWDAA,     PWD, _______, _______, _______, _______, _______, _______, _______, _______, \
+    _______, _______, _______,   PWDME,   PWDAA,   PWD1P, _______, _______, _______, _______, _______, _______, _______, _______, \
     _______, RGB_MOD, _______, _______, _______, _______, GUISWAP, KC_MPLY, _______, _______, _______, _______, _______, _______, \
                                                  KC_BSPC,  KC_ENT, _______, KC_SPC \
   )
@@ -196,7 +197,7 @@ void encoder_update_user(uint8_t index, bool clockwise) {
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   static uint16_t reset_timer;
   switch (keycode) {
-    case PWD:
+    case PWD1P:
       if (record->event.pressed) {
         SEND_STRING(CPWD1P SS_TAP(X_ENT));
       }
@@ -205,6 +206,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case PWDAA:
       if (record->event.pressed) {
         SEND_STRING(CPWDAA SS_TAP(X_ENT));
+      }
+      return true;
+
+    case PWDME:
+      if (record->event.pressed) {
+        SEND_STRING(CPWDME);
       }
       return true;
 
