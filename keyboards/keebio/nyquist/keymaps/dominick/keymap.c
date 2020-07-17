@@ -9,8 +9,9 @@ enum layer_names {
 };
 
 enum custom_keycodes {
-  PWD = SAFE_RANGE,
+  PWD1P = SAFE_RANGE,
   PWDAA,
+  PWDME,
   LT3_TAB
 };
 
@@ -49,7 +50,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_GRV,  KC_1,  KC_2,    KC_3,   KC_4,   KC_5,    KC_6,   KC_7,    KC_8,    KC_9,    KC_0,    KC_DEL,
   _______, KC_F1, KC_F2,   KC_F3,  KC_F4,  KC_F5,   KC_F6,  KC_LCBR, KC_RCBR, _______, _______, _______,
   _______, KC_F7, KC_F8,   KC_F9,  KC_F10, KC_F11,  KC_F12, KC_UNDS, KC_PLUS, _______, _______, _______,
-  KC_ENT,  PWD,   PWDAA, _______, _______, KC_ENT, _______, _______, _______, KC_SCROLLLOCK, KC_PAUSE, _______
+  KC_ENT, _______, _______, _______, _______, KC_ENT, _______, _______, _______, KC_SCROLLLOCK, KC_PAUSE, _______
 ),
 
 /* Raise
@@ -84,7 +85,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_FUNCTION] = LAYOUT_ortho_4x12(
   KC_GRV,   _______,   KC_UP,  _______, _______, _______, _______, KC_LBRC, KC_RBRC, _______, KC_PSCR, KC_INSERT,
   _______,  KC_LEFT, KC_DOWN, KC_RIGHT, _______, _______, _______, KC_LCBR, KC_RCBR, _______, _______, _______,
-  KC_CAPS,  _______, _______,  _______,   PWDAA,     PWD, _______, KC_MINS,  KC_EQL, _______, _______, _______,
+  KC_CAPS,  _______, _______,    PWDME,   PWDAA,   PWD1P, _______, KC_MINS,  KC_EQL, _______, _______, _______,
   _______,    RESET, _______,   KC_DEL, KC_BSPC,  KC_ENT,  _______, _______, _______, _______, _______, _______
 )
 
@@ -136,7 +137,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       break;
 
-    case PWD:
+    case PWD1P:
       if (record->event.pressed) {
         SEND_STRING(CPWD1P SS_TAP(X_ENT));
       }
@@ -145,6 +146,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case PWDAA:
       if (record->event.pressed) {
         SEND_STRING(CPWDAA SS_TAP(X_ENT));
+      }
+      break;
+
+    case PWDME:
+      if (record->event.pressed) {
+        SEND_STRING(CPWDME);
       }
       break;
   }
