@@ -87,7 +87,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_GRV,   _______,   KC_UP,  _______, _______, _______, KC_MUTE, KC_LBRC, KC_RBRC, _______, KC_PSCR, KC_INSERT,
   _______,  KC_LEFT, KC_DOWN, KC_RIGHT, _______, _______, KC_VOLU, KC_LCBR, KC_RCBR, _______, _______, _______,
   KC_CAPS,  _______, _______,    PWDME,   PWDAA,   PWD1P, KC_VOLD, KC_MINS,  KC_EQL, _______, _______, _______,
-  _______,    RESET, _______,   KC_DEL, KC_BSPC,  KC_ENT, _______,   RAISE, _______, _______, _______, _______
+  _______,    RESET, _______,  _______,   LOWER, _______, _______,   RAISE, _______, _______, _______, _______
 )
 
 };
