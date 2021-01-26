@@ -24,16 +24,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
  * |Ctrl/TAB|   A  |   S  |  D   |   F  |   G  |                              |   H  |   J  |   K  |   L  | ;  : |  Enter |
  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
- * | LShift |   Z  |   X  |   C  |   V  |   B  |      | Esc  |  | Del  |      |   N  |   M  | ,  < | . >  | /  ? |  Shift |
+ * | LShift |   Z  |   X  |   C  |   V  |   B  |      | BSPC |  | Del  |      |   N  |   M  | ,  < | . >  | /  ? |  Shift |
  * `----------------------+------+------+------+ SPC  +------|  |------+ BSPC +------+------+------+----------------------'
- *                        | GUI  | Del  | Lower|      | LCTL |  | Esc  |      | Raise| RGUI | RALT |
+ *                        | GUI  | Del  | Lower|      | ADJ  |  | Del  |      | Raise| RGUI | RALT |
  *                        `----------------------------------'  `----------------------------------'
  */
     [_QWERTY] = LAYOUT(
      KC_GESC, KC_Q, KC_W, KC_E, KC_R, KC_T,                                     KC_Y, KC_U, KC_I, KC_O, KC_P, KC_BSLS,
      MT(MOD_LCTL, KC_TAB), KC_A, KC_S, KC_D, KC_F, KC_G,                        KC_H, KC_J, KC_K, KC_L, KC_SCLN, KC_ENT,
-     KC_LSFT, KC_Z, KC_X, KC_C, KC_V, KC_B, KC_SPACE, KC_ESC,  KC_DEL, KC_BSPC, KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, KC_RSFT,
-             KC_MUTE, KC_LALT, MO(_LOWER),  KC_SPACE, KC_LCTL, KC_ESC, KC_BSPC, MO(_RAISE), KC_RGUI, KC_RALT
+     KC_LSFT, KC_Z, KC_X, KC_C, KC_V, KC_B, KC_SPACE, KC_BSPC,  KC_DEL, KC_BSPC, KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, KC_RSFT,
+             KC_MUTE, KC_LALT, MO(_LOWER),  KC_SPACE, MO(_ADJUST), KC_DEL, KC_BSPC, MO(_RAISE), KC_RGUI, KC_RALT
     ),
 /*
  * Lower Layer: Number keys, media, navigation
@@ -53,7 +53,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_GRV,  KC_1,  KC_2,  KC_3,  KC_4,  KC_5,                                          KC_6,    KC_7,    KC_8,    KC_9,    KC_0, _______,
       _______, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5,                                        KC_F6, KC_LCBR, KC_RCBR, KC_LBRC, KC_RBRC, _______,
       _______, KC_F7, KC_F8, KC_F9, KC_F10, KC_F11, _______, _______, _______, _______, KC_F12, KC_MINS, KC_EQL,  KC_UNDS, KC_PLUS, _______,
-                                  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
+                                  KC_MPLY, _______, _______, _______, _______, _______, _______, _______, _______, _______
     ),
 /*
  * Raise Layer: Symbols
@@ -72,9 +72,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
     [_RAISE] = LAYOUT(
        KC_GRV, KC_EXLM, KC_AT,   KC_HASH, KC_DLR, KC_PERC,                                      KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_ESC,
-      _______, _______, _______, _______, _______, _______,                                     KC_LEFT, KC_DOWN, KC_UP, KC_RIGHT, KC_QUOT, _______,
+      _______, _______, _______, _______, _______, _______,                                     KC_LEFT, KC_DOWN, KC_UP, KC_RIGHT, KC_QUOT, KC_TAB,
       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-                                 _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
+                                 _______, _______, _______, _______, _______, _______, _______, _______, _______, PWDAA
     ),
 /*
  * Adjust Layer: Function keys, RGB
@@ -91,10 +91,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_ADJUST] = LAYOUT(
-      _______, RGB_TOG, RGB_SAI, RGB_HUI, RGB_VAI, RGB_MOD,                                      _______, _______, _______, _______, _______, _______,
+      _______, RGB_TOG, RGB_SAI, RGB_HUI, RGB_VAI, RGB_MOD,                                      _______, _______, _______, _______, _______, RESET,
       PWD1P,   _______, RGB_SAD, RGB_HUD, RGB_VAD, RGB_RMOD,                                     _______, _______, _______, _______, _______, _______,
-      _______, _______, _______, PWDME,   PWDAA,   _______,   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-                                 _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
+      KC_CAPS, _______, _______, PWDME,   PWDAA,   PWD1P,   KC_DEL, _______, _______, _______, _______, _______, _______, _______, _______, _______,
+                                 _______, _______, _______, KC_ENT, _______, _______, _______, _______, _______, _______
     ),
 // /*
 //  * Layer template
@@ -119,7 +119,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 layer_state_t layer_state_set_user(layer_state_t state) {
+  if(IS_LAYER_ON(_LOWER) || IS_LAYER_ON(_RAISE)) {
     return update_tri_layer_state(state, _LOWER, _RAISE, _ADJUST);
+  } else {
+    return state;
+  }
 }
 
 #ifdef OLED_DRIVER_ENABLE
@@ -190,23 +194,24 @@ void oled_task_user(void) {
 }
 #endif
 
+
+
 #ifdef ENCODER_ENABLE
 void encoder_update_user(uint8_t index, bool clockwise) {
-    if (index == 0) {
-        // Volume control
-        if (clockwise) {
-            tap_code(KC_VOLU);
-        } else {
-            tap_code(KC_VOLD);
-        }
-    }
-    else if (index == 1) {
-        // Page up/Page down
-        if (clockwise) {
-            tap_code(KC_PGDN);
-        } else {
-            tap_code(KC_PGUP);
-        }
+    if (index == 0) { /* left encoder */
+      if (layer_state_is(_RAISE)) {
+        tap_code(clockwise ? KC_UP : KC_DOWN);
+      } else {
+        tap_code(clockwise ? KC_VOLU : KC_VOLD);
+      }
+    } else if (index == 1) { /* right encoder */
+      if (layer_state_is(_LOWER)) {
+        // windows brightness
+        tap_code(clockwise ? KC_BRIGHTNESS_DOWN : KC_BRIGHTNESS_UP);
+      } else {
+        // scroll lock and pause controls brightness for active display on Mac
+        tap_code(clockwise ? KC_PAUSE: KC_SCROLLLOCK);
+      }
     }
 }
 #endif
