@@ -78,10 +78,14 @@ MT(MOD_LCTL, KC_TAB),    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,              
   )
 };
 
-layer_state_t layer_state_set_user(layer_state_t state) {
-    return update_tri_layer_state(state, _LOWER, _RAISE, _ADJUST);
-}
 
+layer_state_t layer_state_set_user(layer_state_t state) {
+  if(IS_LAYER_ON(_LOWER) || IS_LAYER_ON(_RAISE)) {
+    return update_tri_layer_state(state, _LOWER, _RAISE, _ADJUST);
+  } else {
+    return state;
+  }
+}
 
 
 int RGB_current_mode;
