@@ -32,8 +32,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_QWERTY] = LAYOUT(
      KC_GESC, KC_Q, KC_W, KC_E, KC_R, KC_T,                                     KC_Y, KC_U, KC_I, KC_O, KC_P, KC_BSLS,
      MT(MOD_LCTL, KC_TAB), KC_A, KC_S, KC_D, KC_F, KC_G,                        KC_H, KC_J, KC_K, KC_L, KC_SCLN, KC_ENT,
-     KC_LSFT, KC_Z, KC_X, KC_C, KC_V, KC_B, KC_SPACE, KC_BSPC,  KC_DEL, KC_BSPC, KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, KC_RSFT,
-             KC_MUTE, KC_LALT, MO(_LOWER),  KC_SPACE, MO(_ADJUST), KC_DEL, KC_BSPC, MO(_RAISE), KC_RGUI, KC_RALT
+     KC_LSFT, KC_Z, KC_X, KC_C, KC_V, KC_B, KC_BSPC, MO(_ADJUST), MO(_ADJUST),  KC_DEL, KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, KC_RSFT,
+             KC_MUTE, KC_LGUI, MO(_LOWER),  KC_SPACE, KC_LALT, KC_APP, KC_BSPC, MO(_RAISE), KC_RGUI, KC_END
     ),
 /*
  * Lower Layer: Number keys, media, navigation
@@ -132,6 +132,7 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
 }
 
 static void render_kyria_logo(void) {
+  // https://javl.github.io/image2cpp/
     static const char PROGMEM kyria_logo[] = {
         0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,128,128,192,224,240,112,120, 56, 60, 28, 30, 14, 14, 14,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7, 14, 14, 14, 30, 28, 60, 56,120,112,240,224,192,128,128,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
         0,  0,  0,  0,  0,  0,  0,192,224,240,124, 62, 31, 15,  7,  3,  1,128,192,224,240,120, 56, 60, 28, 30, 14, 14,  7,  7,135,231,127, 31,255,255, 31,127,231,135,  7,  7, 14, 14, 30, 28, 60, 56,120,240,224,192,128,  1,  3,  7, 15, 31, 62,124,240,224,192,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -264,3 +265,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
   return true;
 }
+
+void matrix_init_user(void) {
+  rgblight_enable();
+  rgblight_sethsv(0,255,255);
+  rgblight_mode(9);
+};
