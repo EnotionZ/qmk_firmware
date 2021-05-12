@@ -91,8 +91,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_RAISE] = LAYOUT( /* Right */
   KC_GRV,  KC_EXLM,   KC_AT, KC_HASH,  KC_DLR, KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR,  KC_LPRN, KC_RPRN, KC_BSPC,
   _______, _______, _______, _______, _______, _______, KC_LEFT, KC_DOWN,   KC_UP, KC_RIGHT, KC_QUOT, _______,
-  KC_TILDE, _______, _______, _______, _______, _______, _______, _______, _______,  _______, _______, _______,
-  _______, _______, _______, _______, MO(_LOWER),     KC_BSPC,     MO(_RAISE), KC_MPLY, KC_VOLD, KC_VOLU, KC_MUTE
+  _______, _______, _______, _______, _______, _______, RGB_HUI, RGB_SAI, RGB_VAI, RGB_MOD, RGB_TOG, _______,
+  _______, _______, _______, _______, MO(_LOWER),     KC_BSPC,     MO(_RAISE), KC_VOLD, KC_VOLU, KC_MPLY, KC_MUTE
 
 ),
 
@@ -112,7 +112,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 [_ADJUST] = LAYOUT( /* Tab */
   _______,  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, RESET,
-  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, RGB_TOG,
+  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
   KC_CAPS, _______, _______,  PWDME, PWDAA, PWD1P, _______, _______, _______, _______, _______, _______,
   _______, _______, _______,  _______, MO(_LOWER),     KC_BSPC,  MO(_RAISE), KC_HOME, KC_PGDN, KC_PGUP, KC_END
 ),
@@ -152,4 +152,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   }
 
   return true;
+};
+
+// https://github.com/qmk/qmk_firmware/blob/master/docs/feature_rgblight.md
+void matrix_init_user(void) { // Runs boot tasks for keyboard
+  rgblight_enable();
+  rgblight_sethsv(0,255,255);
+  rgblight_mode(9);
 };
