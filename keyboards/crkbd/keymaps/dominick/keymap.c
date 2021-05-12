@@ -49,7 +49,7 @@ MT(MOD_LCTL, KC_TAB),    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,              
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       _______,   KC_F7,   KC_F8,   KC_F9,  KC_F10,  KC_F11,                       KC_F12, KC_MINS,  KC_EQL, KC_UNDS, KC_PLUS, _______,\
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          KC_LALT, _______, _______,     KC_DEL, _______, KC_RGUI \
+                                          KC_LALT, _______, KC_RGUI,     KC_DEL, _______, KC_RGUI \
                                       //`--------------------------'  `--------------------------'
     ),
 
@@ -201,4 +201,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   }
 
   return true;
+}
+
+void encoder_update_kb(uint8_t index, bool clockwise) {
+  tap_code(clockwise ? KC_VOLU : KC_VOLD);
 }
