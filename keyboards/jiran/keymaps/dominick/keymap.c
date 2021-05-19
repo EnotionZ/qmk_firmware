@@ -15,8 +15,13 @@ enum custom_keycodes {
   PWDME,
 };
 
+#define LOWER MO(_LOWER)
+#define RAISE MO(_RAISE)
+#define ADJUST MO(_ADJUST)
+#define CTLTAB MT(MOD_LCTL, KC_TAB)
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-/* 
+/*
  * Base Layer: QWERTY
  *
  * ,-------------------------------------------.                              ,-------------------------------------------.
@@ -30,10 +35,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_QWERTY] = LAYOUT(
-     KC_GESC, KC_Q, KC_W, KC_E, KC_R, KC_T,                                     KC_Y, KC_U, KC_I, KC_O, KC_P, KC_BSLS,
-     MT(MOD_LCTL, KC_TAB), KC_A, KC_S, KC_D, KC_F, KC_G,                        KC_H, KC_J, KC_K, KC_L, KC_SCLN, KC_ENT,
-     KC_LSFT, KC_Z, KC_X, KC_C, KC_V, KC_B, KC_BSPC, MO(_ADJUST), MO(_ADJUST),  KC_DEL, KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, KC_RSFT,
-             KC_MUTE, KC_LGUI, MO(_LOWER),  KC_SPACE, KC_LALT, KC_APP, KC_BSPC, MO(_RAISE), KC_RGUI, KC_END
+     KC_GESC, KC_Q, KC_W, KC_E, KC_R, KC_T,                                      KC_Y, KC_U, KC_I, KC_O, KC_P, KC_BSLS,
+     CTLTAB,  KC_A, KC_S, KC_D, KC_F, KC_G,                                      KC_H, KC_J, KC_K, KC_L, KC_SCLN, KC_ENT,
+     KC_LSFT, KC_Z, KC_X, KC_C, KC_V, KC_B,  KC_BSPC, ADJUST,  ADJUST,  KC_DEL,  KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, KC_RSFT,
+                    KC_MUTE, KC_LGUI, LOWER, KC_SPC,  KC_LALT, KC_APP,  KC_BSPC, RAISE, KC_RGUI, KC_END
     ),
 /*
  * Lower Layer: Number keys, media, navigation
@@ -53,7 +58,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_GRV,  KC_1,  KC_2,  KC_3,  KC_4,  KC_5,                                          KC_6,    KC_7,    KC_8,    KC_9,    KC_0, _______,
       _______, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5,                                        KC_F6, KC_LCBR, KC_RCBR, KC_LBRC, KC_RBRC, _______,
       _______, KC_F7, KC_F8, KC_F9, KC_F10, KC_F11, _______, _______, _______, _______, KC_F12, KC_MINS, KC_EQL,  KC_UNDS, KC_PLUS, _______,
-                                  KC_MPLY, _______, _______, _______, _______, _______, _______, _______, _______, _______
+                         KC_MPLY, _______, _______, _______, _______, _______, _______, _______, _______, _______
     ),
 /*
  * Raise Layer: Symbols
@@ -201,17 +206,17 @@ void oled_task_user(void) {
 void encoder_update_user(uint8_t index, bool clockwise) {
     if (index == 0) { /* left encoder */
       if (layer_state_is(_RAISE)) {
-        tap_code(clockwise ? KC_UP : KC_DOWN);
+        // scroll lock and pause controls brightness for active display on Mac
+        tap_code(clockwise ? KC_PAUSE : KC_SCROLLLOCK);
       } else {
         tap_code(clockwise ? KC_VOLU : KC_VOLD);
       }
     } else if (index == 1) { /* right encoder */
       if (layer_state_is(_LOWER)) {
         // windows brightness
-        tap_code(clockwise ? KC_BRIGHTNESS_DOWN : KC_BRIGHTNESS_UP);
+        tap_code(!clockwise ? KC_BRIGHTNESS_DOWN : KC_BRIGHTNESS_UP);
       } else {
-        // scroll lock and pause controls brightness for active display on Mac
-        tap_code(clockwise ? KC_PAUSE: KC_SCROLLLOCK);
+        tap_code(clockwise ? KC_DOWN : KC_UP);
       }
     }
 }
