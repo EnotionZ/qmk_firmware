@@ -20,6 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
+#undef PRODUCT
+#define PRODUCT Dominick CRKBD
+
 //#define USE_MATRIX_I2C
 
 /* Select hand configuration */
@@ -28,8 +31,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define MASTER_RIGHT
 // #define EE_HANDS
 
-#define ENCODERS_PAD_A { B2 }
-#define ENCODERS_PAD_B { B6 }
+#define ENCODERS_PAD_A { B5 }
+#define ENCODERS_PAD_B { B4 }
 
 #define SSD1306OLED
 
