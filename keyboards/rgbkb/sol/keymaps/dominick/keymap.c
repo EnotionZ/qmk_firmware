@@ -53,7 +53,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      KC_TAB,    KC_Q,    KC_W,    KC_E,    KC_R,   KC_T, KC_LBRC, KC_RBRC,    KC_Y,    KC_U,       KC_I,    KC_O,    KC_P, KC_BSLS, \
          FN,    KC_A,    KC_S,    KC_D,    KC_F,   KC_G,      FN,      FN,    KC_H,    KC_J,       KC_K,    KC_L, KC_SCLN, KC_ENT, \
     KC_LSFT,    KC_Z,    KC_X,    KC_C,    KC_V,   KC_B, _______, _______,    KC_N,    KC_M,    KC_COMM,  KC_DOT, KC_SLSH, KC_RSFT, \
-    KC_LCTL, RGB_TOG, RGB_MOD, KC_LALT, KC_LCTL, KC_SPC, _______, KC_MUTE, KC_BSPC,    KC_QUOT, KC_MINS,      FN, KC_RALT, KC_RCTL, \
+    KC_LCTL, RGB_TOG, RGB_MOD, KC_LALT, KC_LCTL, KC_SPC, KC_MUTE, KC_MUTE, KC_BSPC,    KC_QUOT, KC_MINS,      FN, KC_RALT, KC_RCTL, \
                                                  KC_SPC, KC_LGUI, KC_RGUI, KC_BSPC \
     ),
 
@@ -150,6 +150,7 @@ void rgb_matrix_decrease_flags(void)
 }
 #endif
 
+#ifdef RGB_OLED_MENU
 uint8_t rgb_encoder_state = 4;
 
 typedef void (*rgb_matrix_f)(void);
@@ -162,19 +163,22 @@ const rgb_matrix_f rgb_matrix_functions[6][2] = {
     { rgb_matrix_step, rgb_matrix_step_reverse },
     { rgb_matrix_increase_flags, rgb_matrix_decrease_flags }
 };
+#endif
 
 #ifdef ENCODER_ENABLE
 
 static bool fn_down = false;
 
-void encoder_update_user(uint8_t index, bool clockwise) {
+bool encoder_update_user(uint8_t index, bool clockwise) {
 
   if (index == 0) { /* Left encoder */
     uint8_t layer = layer_state ? biton(layer_state) : biton32(default_layer_state);
     bool isMac = layer != _GUISWAP;
 
     if(fn_down) {
+#ifdef RGB_OLED_MENU
       (*rgb_matrix_functions[rgb_encoder_state][clockwise])();
+#endif
     } else {
       if(isMac) {
         // scroll lock and pause controls brightness for active display on Mac
@@ -191,6 +195,8 @@ void encoder_update_user(uint8_t index, bool clockwise) {
       tap_code(clockwise ? KC_UP : KC_DOWN);
     }
   }
+
+  return true;
 }
 #endif
 
@@ -271,7 +277,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 
 // OLED Driver Logic
-#ifdef OLED_DRIVER_ENABLE
+#ifdef OLED_ENABLE
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
   if (is_keyboard_master())
     return OLED_ROTATION_270;
