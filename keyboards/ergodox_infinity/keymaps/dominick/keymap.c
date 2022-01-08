@@ -33,18 +33,18 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
  * | TAB    |   Q  |   W  |   E  |   R  |   T  |  [   |           |   ]  |   Y  |   U  |   I  |   O  |   P  |   \    |
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
- * | CTRL   |   A  |   S  |   D  |   F  |   G  |------|           |------|   H  |   J  |   K  |   L  |   ;  |  Enter |
+ * | LOWER  |   A  |   S  |   D  |   F  |   G  |------|           |------|   H  |   J  |   K  |   L  |   ;  |  Enter |
  * |--------+------+------+------+------+------| Hyper|           | Meh  |------+------+------+------+------+--------|
  * | LShift |   Z  |   X  |   C  |   V  |   B  |      |           |      |   N  |   M  |   ,  |   .  |   /  | RShift |
  * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
- *   | Mute |  App |  Alt | Gui  | LOWER|                                       | RAISE|  -_  |  Alt |  Gui | Delete |
+ *   | Mute |  App | LGui | LAlt | Ctrl |                                       | RAISE|  -_  |  Alt |  Gui | Delete |
  *   `----------------------------------'                                       `----------------------------------'
  *                                        ,-------------.       ,---------------.
- *                                        | Del  | Ins  |       | Gui  |   Alt  |
+ *                                        | Del  | Ins  |       | End  |  Home  |
  *                                 ,------|------|------|       |------+--------+------.
- *                                 |      |      | Home |       | PgUp |        |      |
- *                                 | Space| Ctrl |------|       |------| Rctrl  | Bspc |
- *                                 |      |      | End  |       | PgDn |        |      |
+ *                                 |      |      | Entr |       | PgUp |        |      |
+ *                                 | Space| LGUI |------|       |------| Rctrl  | Bspc |
+ *                                 |      |      | Adj  |       | PgDn |        |      |
  *                                 `--------------------'       `----------------------'
  */
 // If it accepts an argument (i.e, is a function), it doesn't need KC_.
@@ -57,7 +57,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
        KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    ALL_T(KC_NO),
        KC_MUTE, KC_APP,  KC_LGUI, KC_LALT, KC_LCTL,
                                                              KC_DEL,  KC_INS,
-                                                                      KC_HOME,
+                                                                      KC_ENT,
                                                     KC_SPC,  KC_LGUI, ADJUST,
         // right hand
                 KC_RGHT, KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_EQL,
@@ -65,7 +65,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                          KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_ENT,
                 MEH_T(KC_NO),KC_N,   KC_M, KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
                                     RAISE, KC_MINS, KC_RALT, KC_RGUI, KC_DEL,
-       KC_RGUI, KC_RALT,
+       KC_END,  KC_HOME,
        KC_PGUP,
        KC_PGDN, KC_RCTL, KC_BSPC
     ),
@@ -144,12 +144,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
           VRSN, _______, _______, _______, _______,
                                                              _______,   RESET,
                                                                       _______,
-                                                     KC_BSPC, KC_ENT, _______,
+                                                    _______, _______, _______,
        // right hand
                 _______, _______, _______, _______, _______, _______, _______,
                 _______, _______, _______, _______, _______, _______, _______,
-                         _______, _______, _______, _______, _______, _______,
-                _______, _______, _______, _______, _______, _______, _______,
+                         _______, KC_LCBR, KC_RCBR, KC_LBRC, KC_RBRC, _______,
+                _______, _______, KC_MINS, KC_EQL,  KC_UNDS, KC_PLUS, _______,
                                   _______, _______, _______, _______, _______,
        _______, _______,
        _______,
