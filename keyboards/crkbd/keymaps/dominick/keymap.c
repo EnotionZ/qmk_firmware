@@ -21,6 +21,7 @@ enum custom_keycodes {
   PWD1P,
   PWDAA,
   PWDME,
+  CTLTB,
 };
 
 enum macro_keycodes {
@@ -165,6 +166,23 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 #endif
 
   switch (keycode) {
+    case CTLTB:
+      if (record->event.pressed) {
+        // if lower, shift, or gui is down, sent tab
+        if(layer_state_is(_LOWER) || keyboard_report->mods & MOD_BIT(KC_LSFT) || keyboard_report->mods & MOD_BIT(KC_LGUI)) {
+          register_code(KC_TAB);
+        } else {
+          register_code(KC_LCTL);
+        }
+      } else {
+        if(layer_state_is(_LOWER) || keyboard_report->mods & MOD_BIT(KC_LSFT) || keyboard_report->mods & MOD_BIT(KC_LGUI)) {
+          unregister_code(KC_TAB);
+        } else {
+          unregister_code(KC_LCTL);
+        }
+      }
+      break;
+
     case PWD1P:
       if (record->event.pressed) {
         SEND_STRING(CPWD1P SS_TAP(X_ENT));
@@ -207,11 +225,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   return true;
 }
 
-void encoder_update_kb(uint8_t index, bool clockwise) {
+bool encoder_update_kb(uint8_t index, bool clockwise) {
   if (layer_state_is(_RAISE)) {
     // scroll lock and pause controls brightness for active display on Mac
     tap_code(clockwise ? KC_PAUSE : KC_SCROLLLOCK);
   } else {
     tap_code(clockwise ? KC_VOLU : KC_VOLD);
   }
+  return true;
 }

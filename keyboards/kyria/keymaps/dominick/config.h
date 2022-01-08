@@ -17,6 +17,7 @@
 #pragma once
 
 #define OLED_DISPLAY_128X64
+#define OLED_BRIGHTNESS 128
 
 #define RGBLIGHT_ANIMATIONS
 #define RGBLIGHT_HUE_STEP 8
