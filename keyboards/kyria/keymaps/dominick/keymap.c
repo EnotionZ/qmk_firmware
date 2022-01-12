@@ -234,13 +234,19 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case CTLTB:
       if (record->event.pressed) {
         // if lower, shift, or gui is down, sent tab
-        if(layer_state_is(_LOWER) || keyboard_report->mods & MOD_BIT(KC_LSFT) || keyboard_report->mods & MOD_BIT(KC_LGUI)) {
+        if(layer_state_is(_LOWER) ||
+            layer_state_is(_RAISE) ||
+            keyboard_report->mods & MOD_BIT(KC_LSFT) ||
+            keyboard_report->mods & MOD_BIT(KC_LGUI)) {
           register_code(KC_TAB);
         } else {
           register_code(KC_LCTL);
         }
       } else {
-        if(layer_state_is(_LOWER) || keyboard_report->mods & MOD_BIT(KC_LSFT) || keyboard_report->mods & MOD_BIT(KC_LGUI)) {
+        if(layer_state_is(_LOWER) ||
+            layer_state_is(_RAISE) ||
+            keyboard_report->mods & MOD_BIT(KC_LSFT) ||
+            keyboard_report->mods & MOD_BIT(KC_LGUI)) {
           unregister_code(KC_TAB);
         } else {
           unregister_code(KC_LCTL);
@@ -250,19 +256,19 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     case PWD1P:
       if (record->event.pressed) {
-        SEND_STRING(CPWD1P SS_TAP(X_ENT));
+        send_string_with_delay_P(PSTR(CPWD1P SS_TAP(X_ENT)), 15);
       }
       break;
 
     case PWDAA:
       if (record->event.pressed) {
-        SEND_STRING(CPWDAA SS_TAP(X_ENT));
+        send_string_with_delay_P(PSTR(CPWDAA SS_TAP(X_ENT)), 15);
       }
       break;
 
     case PWDME:
       if (record->event.pressed) {
-        SEND_STRING(CPWDME);
+        send_string_with_delay_P(PSTR(CPWDME), 15);
       }
       break;
 
