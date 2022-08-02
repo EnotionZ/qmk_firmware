@@ -34,8 +34,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define ENCODERS_PAD_A { B5 }
 #define ENCODERS_PAD_B { B4 }
 
-#define SSD1306OLED
-
 #define USE_SERIAL_PD2
 
 #define TAPPING_FORCE_HOLD

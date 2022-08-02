@@ -262,7 +262,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     case PWDAA:
       if (record->event.pressed) {
-        send_string_with_delay_P(PSTR(CPWDAA SS_TAP(X_ENT)), 15);
+        send_string_with_delay_P(PSTR(CPWDAA SS_TAP(X_ENT)), 30);
       }
       break;
 
