@@ -30,9 +30,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
  * |Ctrl/TAB|   A  |   S  |  D   |   F  |   G  |                              |   H  |   J  |   K  |   L  | ;  : |  Enter |
  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
- * | LShift |   Z  |   X  |   C  |   V  |   B  |      | BSPC |  | Del  |      |   N  |   M  | ,  < | . >  | /  ? |  Shift |
+ * | LShift |   Z  |   X  |   C  |   V  |   B  |      | AdJ  |  | ADJ  |      |   N  |   M  | ,  < | . >  | /  ? |  Shift |
  * `----------------------+------+------+------+ SPC  +------|  |------+ BSPC +------+------+------+----------------------'
- *                        | GUI  | Del  | Lower|      | ADJ  |  | Del  |      | Raise| RGUI | RALT |
+ *                        | GUI  | Del  | Lower|      | LALT |  | APP  |      | Raise| RGUI | RALT |
  *                        `----------------------------------'  `----------------------------------'
  */
     [_QWERTY] = LAYOUT(
@@ -192,12 +192,13 @@ static void render_status(void) {
     oled_write_P(IS_LED_ON(led_usb_state, USB_LED_SCROLL_LOCK) ? PSTR("SCRLCK ") : PSTR("       "), false);
 }
 
-void oled_task_user(void) {
+bool oled_task_user(void) {
     if (is_keyboard_master()) {
         render_status(); // Renders the current keyboard state (layer, lock, caps, scroll, etc)
     } else {
         render_kyria_logo();
     }
+    return true;
 }
 #endif
 
@@ -205,19 +206,19 @@ void oled_task_user(void) {
 
 #ifdef ENCODER_ENABLE
 bool encoder_update_user(uint8_t index, bool clockwise) {
-    if (index == 0) { /* left encoder */
-      if (layer_state_is(_RAISE)) {
-        // scroll lock and pause controls brightness for active display on Mac
-        tap_code(clockwise ? KC_PAUSE : KC_SCROLLLOCK);
-      } else {
-        tap_code(clockwise ? KC_VOLU : KC_VOLD);
-      }
-    } else if (index == 1) { /* right encoder */
+    if (index == 1) { /* right encoder */
       if (layer_state_is(_LOWER)) {
-        // windows brightness
-        tap_code(!clockwise ? KC_BRIGHTNESS_DOWN : KC_BRIGHTNESS_UP);
+        // scroll lock and pause controls brightness for active display on Mac
+        tap_code(!clockwise ? KC_PAUSE : KC_SCROLLLOCK);
       } else {
-        tap_code(clockwise ? KC_DOWN : KC_UP);
+        tap_code(!clockwise ? KC_VOLU : KC_VOLD);
+      }
+    } else if (index == 0) { /* left encoder */
+      if (layer_state_is(_RAISE)) {
+        // windows brightness
+        tap_code(clockwise ? KC_BRIGHTNESS_DOWN : KC_BRIGHTNESS_UP);
+      } else {
+        tap_code(!clockwise ? KC_DOWN : KC_UP);
       }
     }
     return true;
