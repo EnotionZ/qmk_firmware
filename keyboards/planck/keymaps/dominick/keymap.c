@@ -267,17 +267,18 @@ uint16_t muse_tempo = 50;
 /* } */
 
 #ifdef ENCODER_ENABLE
-void encoder_update_user(uint8_t index, bool clockwise) {
+bool encoder_update_user(uint8_t index, bool clockwise) {
   if (layer_state_is(_RAISE)) {
     // scroll lock and pause controls brightness for active display on Mac
-    tap_code(clockwise ? KC_PAUSE : KC_SCROLLLOCK);
+    tap_code(!clockwise ? KC_PAUSE : KC_SCROLLLOCK);
   } else {
-    tap_code(clockwise ? KC_VOLU : KC_VOLD);
+    tap_code(!clockwise ? KC_VOLU : KC_VOLD);
   }
+  return false;
 }
 #endif
 
-void dip_switch_update_user(uint8_t index, bool active) {
+bool dip_switch_update_user(uint8_t index, bool active) {
     switch (index) {
         case 0: {
 #ifdef AUDIO_ENABLE
@@ -306,6 +307,7 @@ void dip_switch_update_user(uint8_t index, bool active) {
                 muse_mode = false;
             }
     }
+    return true;
 }
 
 void matrix_scan_user(void) {
