@@ -1,12 +1,6 @@
 #include QMK_KEYBOARD_H
 #include "shared.h"
 
-
-#ifdef RGBLIGHT_ENABLE
-//Following line allows macro to read current RGB settings
-extern rgblight_config_t rgblight_config;
-#endif
-
 extern uint8_t is_master;
 
 enum layers {
@@ -24,10 +18,6 @@ enum custom_keycodes {
   CTLTB,
 };
 
-enum macro_keycodes {
-  KC_SAMPLEMACRO,
-};
-
 #define LOWER MO(_LOWER)
 #define RAISE MO(_RAISE)
 #define CTLTAB MT(MOD_LCTL, KC_TAB)
@@ -43,8 +33,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_LOWER] = LAYOUT(
       KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                      KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_INS,
-      KC_TAB,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                     KC_F6,   KC_LCBR, KC_RCBR, KC_LBRC, KC_RBRC, _______,
-      _______, KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,                    KC_F12,  KC_MINS, KC_EQL,  KC_UNDS, KC_PLUS, _______,
+      KC_TAB,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                     KC_F11,  KC_LCBR, KC_RCBR, KC_LBRC, KC_RBRC, _______,
+      _______, KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,                    KC_F12,  KC_MINS, KC_EQL,  KC_UNDS, KC_PLUS, _______,
                                           _______, LOWER,   KC_RGUI, _______, RAISE,   _______
     ),
 
@@ -72,21 +62,10 @@ layer_state_t layer_state_set_user(layer_state_t state) {
   }
 }
 
-
-int RGB_current_mode;
-
 void persistent_default_layer_set(uint16_t default_layer) {
   eeconfig_update_default_layer(default_layer);
   default_layer_set(default_layer);
 }
-
-void matrix_init_user(void) {
-    #ifdef RGBLIGHT_ENABLE
-      RGB_current_mode = rgblight_config.mode;
-    #endif
-}
-
-
 
 
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
@@ -213,40 +192,20 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     case PWD1P:
       if (record->event.pressed) {
-        SEND_STRING(CPWD1P SS_TAP(X_ENT));
+        send_string_with_delay_P(PSTR(CPWD1P SS_TAP(X_ENT)), 15);
       }
       break;
 
     case PWDAA:
       if (record->event.pressed) {
-        SEND_STRING(CPWDAA SS_TAP(X_ENT));
+        send_string_with_delay_P(PSTR(CPWDAA SS_TAP(X_ENT)), 30);
       }
       break;
 
     case PWDME:
       if (record->event.pressed) {
-        SEND_STRING(CPWDME);
+        send_string_with_delay_P(PSTR(CPWDME), 15);
       }
-      break;
-
-    case RGB_MOD:
-      #ifdef RGBLIGHT_ENABLE
-        if (record->event.pressed) {
-          rgblight_mode(RGB_current_mode);
-          rgblight_step();
-          RGB_current_mode = rgblight_config.mode;
-        }
-      #endif
-      return false;
-
-    case RGBRST:
-      #ifdef RGBLIGHT_ENABLE
-        if (record->event.pressed) {
-          eeconfig_update_rgblight_default();
-          rgblight_enable();
-          RGB_current_mode = rgblight_config.mode;
-        }
-      #endif
       break;
   }
 
