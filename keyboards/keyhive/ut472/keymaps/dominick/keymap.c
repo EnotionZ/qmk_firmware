@@ -94,8 +94,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_RAISE] = LAYOUT( /* Right */
   KC_GRV,  KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN,  KC_RPRN, KC_BSPC,
   KC_TAB,  _______, _______, _______, _______, _______, KC_LEFT, KC_DOWN, KC_UP,   KC_RIGHT, KC_QUOT, _______,
-  _______, _______, _______, _______, _______, _______, RGB_HUI, RGB_SAI, RGB_VAI, RGB_MOD,  RGB_TOG, _______,
-  _______, _______, _______, _______, LOWER,        KC_BSPC,     RAISE,   KC_VOLD, KC_VOLU,  KC_MPLY, KC_MUTE
+  _______, _______, _______, _______, _______, _______, KC_MUTE, KC_VOLD, KC_VOLU, KC_MPLY,  RGB_TOG, _______,
+  _______, _______, _______, _______, LOWER,        KC_BSPC,     RAISE,   RGB_HUI, RGB_SAI,  RGB_VAI, RGB_MOD
 
 ),
 
@@ -114,8 +114,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    */
 
 [_ADJUST] = LAYOUT( /* Tab */
-  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, RESET,
-  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
+  _______, _______, _______, _______, _______, _______, KC_PSCR, KC_SCRL, KC_PAUS, _______, _______, RESET,
+  _______, _______, _______, _______, _______, _______, _______, KC_PGDN, KC_PGUP, _______, _______, _______,
   KC_CAPS, _______, _______, PWDME,   PWDAA,   PWD1P,   _______, _______, _______, _______, _______, _______,
   _______, _______, _______, _______, LOWER,       KC_BSPC,      RAISE,   KC_HOME, KC_PGDN, KC_PGUP, KC_END
 ),
