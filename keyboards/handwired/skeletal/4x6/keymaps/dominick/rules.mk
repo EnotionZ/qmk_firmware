@@ -1,4 +1,4 @@
-ENCODER_ENABLE     = no
+ENCODER_ENABLE     = yes
 THUMBSTICK_ENABLE  = yes
 
 ifeq ($(strip $(THUMBSTICK_ENABLE)), yes)
