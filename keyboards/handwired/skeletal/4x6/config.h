@@ -51,9 +51,6 @@ SCL/D0 [  3] -|      |- [ A2] F5
 // COL2ROW or ROW2COL
 #define DIODE_DIRECTION COL2ROW
 
-#define SPLIT_POINTING_ENABLE
-#define POINTING_DEVICE_RIGHT
-
 // Rotary Encoder
 #define ENCODERS_PAD_A { F6 }
 #define ENCODERS_PAD_B { F7 }
@@ -61,17 +58,20 @@ SCL/D0 [  3] -|      |- [ A2] F5
 #define ENCODERS_PAD_B_RIGHT { }
 
 // Joystick Pointer
+#define SPLIT_POINTING_ENABLE
+#define POINTING_DEVICE_RIGHT
 #define ANALOG_JOYSTICK_X_AXIS_PIN F5
 #define ANALOG_JOYSTICK_Y_AXIS_PIN F6
 #define ANALOG_JOYSTICK_CLICK_PIN F7
+#define ANALOG_JOYSTICK_READ_INTERVAL 1
 
 // WS2812 RGB LED strip input and number of LEDs
-// #define RGB_DI_PIN D3
-// #ifdef  RGB_DI_PIN
-// #define RGBLIGHT_ANIMATIONS
-// #define RGBLED_NUM 16
-// #define RGBLED_SPLIT {8, 8}
-// #define RGBLIGHT_HUE_STEP 8
-// #define RGBLIGHT_SAT_STEP 8
-// #define RGBLIGHT_VAL_STEP 8
-// #endif
+#define RGB_DI_PIN D3
+#ifdef  RGB_DI_PIN
+#define RGBLIGHT_ANIMATIONS
+#define RGBLED_NUM 16
+#define RGBLED_SPLIT {8, 8}
+#define RGBLIGHT_HUE_STEP 8
+#define RGBLIGHT_SAT_STEP 8
+#define RGBLIGHT_VAL_STEP 8
+#endif
