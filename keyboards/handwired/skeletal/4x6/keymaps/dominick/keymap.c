@@ -12,7 +12,6 @@ enum custom_keycodes {
   PWD1P = SAFE_RANGE,
   PWDAA,
   PWDME,
-  CTLTB,
 };
 
 enum tapdance_keycodes {
@@ -29,6 +28,7 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 #define RAISE MO(_RAISE)
 #define ADJUST MO(_ADJUST)
 #define CTLTAB MT(MOD_LCTL, KC_TAB)
+#define SLSHGUI MT(MOD_LGUI, KC_SLSH)
 #define TD_ALTG TD(TD_ALT_GUI)
 #define TD_GUIA TD(TD_GUI_ALT)
 
@@ -37,7 +37,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_QWERTY] = LAYOUT(
       KC_GESC, KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,        KC_Y,    KC_U,    KC_I,    KC_O,   KC_P,    KC_BSLS,
       CTLTAB,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,        KC_H,    KC_J,    KC_K,    KC_L,   KC_SCLN, KC_ENT,
-      KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,        KC_N,    KC_M,    KC_COMM, KC_DOT, KC_SLSH, KC_RSFT,
+      KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,        KC_N,    KC_M,    KC_COMM, KC_DOT, SLSHGUI, KC_RSFT,
                         KC_MUTE,  LOWER,  KC_SPC,  TD_GUIA,     TD_ALTG, KC_BSPC, RAISE,    _______
   ),
 
@@ -45,7 +45,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_LOWER] = LAYOUT(
       KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,        KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    _______,
       KC_TAB,  _______, _______, _______, KC_ENT,  PWD1P,       _______, KC_LCBR, KC_RCBR, KC_LBRC, KC_RBRC, _______,
-      _______, KC_BSPC, KC_DEL,  _______, PWDME,   PWDAA,       _______, KC_MINS, KC_EQL,  KC_UNDS, KC_PLUS, _______,
+      _______, KC_BSPC, KC_DEL,  _______, PWDME,   PWDAA,       _______, KC_MINS, KC_EQL,  KC_UNDS, _______, _______,
                         _______,  LOWER,  _______, _______,     _______, _______, RAISE,   _______
   ),
 
@@ -74,8 +74,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 
 bool encoder_update_user(uint8_t index, bool clockwise) {
   if (layer_state_is(_RAISE)) {
-    tap_code(!clockwise ? KC_PAUSE : KC_SCROLLLOCK);
-  } else if(layer_state_is(_LOWER)) {
+    //tap_code(!clockwise ? KC_PAUSE : KC_SCROLLLOCK);
     tap_code(clockwise ? KC_BRIGHTNESS_DOWN : KC_BRIGHTNESS_UP);
   } else {
     tap_code(clockwise ? KC_VOLD : KC_VOLU);
@@ -89,29 +88,6 @@ int RGB_current_mode;
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
   switch (keycode) {
-    case CTLTB:
-      if (record->event.pressed) {
-        // if lower, shift, or gui is down, sent tab
-        if(layer_state_is(_LOWER) ||
-            layer_state_is(_RAISE) ||
-            keyboard_report->mods & MOD_BIT(KC_LSFT) ||
-            keyboard_report->mods & MOD_BIT(KC_LGUI)) {
-          register_code(KC_TAB);
-        } else {
-          register_code(KC_LCTL);
-        }
-      } else {
-        if(layer_state_is(_LOWER) ||
-            layer_state_is(_RAISE) ||
-            keyboard_report->mods & MOD_BIT(KC_LSFT) ||
-            keyboard_report->mods & MOD_BIT(KC_LGUI)) {
-          unregister_code(KC_TAB);
-        } else {
-          unregister_code(KC_LCTL);
-        }
-      }
-      break;
-
     case PWD1P:
       if (record->event.pressed) {
         send_string_with_delay_P(PSTR(CPWD1P SS_TAP(X_ENT)), 15);
@@ -141,4 +117,24 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   }
 
   return true;
+}
+
+// mouse_report is a signed int from -127 to 127
+int easeInOutCirc(int n) {
+  float p = (float) abs(n)/POINTER_BASE;
+  float f = (p - 1);
+  int out = (int)(POINTER_BASE*(f*f*f*(1 - p) + 1));
+  if(n<0) out = -1*out;
+  out = (int) (out/POINTER_DOWN_SCALE);
+  return out;
+}
+
+report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
+    mouse_report.x = easeInOutCirc(mouse_report.x);
+    mouse_report.y = easeInOutCirc(mouse_report.y);
+    if (layer_state_is(_LOWER)) {
+        mouse_report.x *= POINTER_UP_SCALE;
+        mouse_report.y *= POINTER_UP_SCALE;
+    }
+    return mouse_report;
 }
