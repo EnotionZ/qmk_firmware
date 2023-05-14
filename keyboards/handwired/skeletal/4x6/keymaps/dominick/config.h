@@ -31,3 +31,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define POINTER_BASE 128
 #define POINTER_DOWN_SCALE 5
 #define POINTER_UP_SCALE 2
+#define SEND_STR_DELAY 15

@@ -2,10 +2,10 @@
 #include "shared.h"
 
 enum layers {
-    _QWERTY = 0,
-    _LOWER,
-    _RAISE,
-    _ADJUST
+  _QWERTY = 0,
+  _LOWER,
+  _RAISE,
+  _ADJUST
 };
 
 enum custom_keycodes {
@@ -20,8 +20,8 @@ enum tapdance_keycodes {
 };
 
 qk_tap_dance_action_t tap_dance_actions[] = {
-    [TD_ALT_GUI]  = ACTION_TAP_DANCE_DOUBLE(KC_RALT, KC_RGUI),
-    [TD_GUI_ALT]  = ACTION_TAP_DANCE_DOUBLE(KC_LGUI, KC_LALT),
+  [TD_ALT_GUI]  = ACTION_TAP_DANCE_DOUBLE(KC_RALT, KC_RGUI),
+  [TD_GUI_ALT]  = ACTION_TAP_DANCE_DOUBLE(KC_LGUI, KC_LALT),
 };
 
 #define LOWER   MO(_LOWER)
@@ -30,16 +30,17 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 #define TD_ALTG TD(TD_ALT_GUI)
 #define TD_GUIA TD(TD_GUI_ALT)
 #define GUIBSPC MT(MOD_RGUI, KC_BSPC)
-#define CTLTAB  MT(MOD_LCTL, KC_TAB)
+#define CTLSCLN MT(MOD_LCTL, KC_SCLN)
 #define CTLSPC  MT(MOD_LCTL, KC_SPC)
+#define CTLTAB  MT(MOD_LCTL, KC_TAB)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_QWERTY] = LAYOUT(
       KC_GESC, KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,        KC_Y,    KC_U,    KC_I,    KC_O,   KC_P,    KC_BSLS,
-      CTLTAB,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,        KC_H,    KC_J,    KC_K,    KC_L,   KC_SCLN, KC_ENT,
+      CTLTAB,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,        KC_H,    KC_J,    KC_K,    KC_L,   CTLSCLN, KC_ENT,
       KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,        KC_N,    KC_M,    KC_COMM, KC_DOT, KC_SLSH, KC_RSFT,
-                        KC_MUTE,  LOWER,  CTLSPC,  TD_GUIA,     TD_ALTG, GUIBSPC, RAISE,    _______
+                        KC_MUTE,  LOWER,  KC_SPC,  TD_GUIA,     TD_ALTG, GUIBSPC, RAISE,    _______
   ),
 
 
@@ -47,14 +48,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,        KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    _______,
       KC_TAB,  _______, _______, _______, KC_ENT,  PWD1P,       _______, KC_LCBR, KC_RCBR, KC_LBRC, KC_RBRC, _______,
       _______, KC_BSPC, KC_DEL,  _______, PWDME,   PWDAA,       _______, KC_MINS, KC_EQL,  KC_UNDS, _______, _______,
-                        _______,  LOWER,  _______, _______,     _______, KC_BSPC, RAISE,   _______
+                        _______,  LOWER,  _______, _______,     _______, _______, RAISE,   _______
   ),
 
   [_RAISE] = LAYOUT(
       KC_GRV,  KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,     KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_DEL,
       _______, _______, _______, _______, _______, _______,     KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_QUOT, KC_MUTE,
       _______, _______, _______, _______, _______, _______,     KC_MPRV, KC_VOLD, KC_VOLU, KC_MPLY, KC_MNXT, _______,
-                        _______, LOWER,   KC_SPC,  _______,     _______, _______, RAISE,   _______
+                        _______, LOWER,   KC_LCTL, _______,     _______, _______, RAISE,   _______
   ),
 
   [_ADJUST] = LAYOUT(
@@ -87,25 +88,25 @@ extern rgblight_config_t rgblight_config;
 int RGB_current_mode;
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-
   switch (keycode) {
     case PWD1P:
       if (record->event.pressed) {
-        send_string_with_delay_P(PSTR(CPWD1P SS_TAP(X_ENT)), 15);
+        send_string_with_delay_P(PSTR(CPWD1P SS_TAP(X_ENT)), SEND_STR_DELAY);
       }
       break;
 
     case PWDAA:
       if (record->event.pressed) {
-        send_string_with_delay_P(PSTR(CPWDAA SS_TAP(X_ENT)), 30);
+        send_string_with_delay_P(PSTR(CPWDAA SS_TAP(X_ENT)), SEND_STR_DELAY);
       }
       break;
 
     case PWDME:
       if (record->event.pressed) {
-        send_string_with_delay_P(PSTR(CPWDME), 15);
+        send_string_with_delay_P(PSTR(CPWDME), SEND_STR_DELAY);
       }
       break;
+
     case RGB_MOD:
       #ifdef RGBLIGHT_ENABLE
         if (record->event.pressed) {
@@ -116,12 +117,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       #endif
       return false;
   }
-
   return true;
 }
 
+void matrix_init_user(void) {
+  rgblight_enable();
+  rgblight_sethsv(0,255,255);
+  rgblight_mode(9);
+};
+
 // mouse_report is a signed int from -127 to 127
-int easeInOutCirc(int n) {
+int easeInOut(int n) {
   float p = (float) abs(n)/POINTER_BASE;
   float f = (p - 1);
   int out = (int)(POINTER_BASE*(f*f*f*(1 - p) + 1));
@@ -131,11 +137,11 @@ int easeInOutCirc(int n) {
 }
 
 report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
-    mouse_report.x = easeInOutCirc(mouse_report.x);
-    mouse_report.y = easeInOutCirc(mouse_report.y);
-    if (layer_state_is(_LOWER)) {
-        mouse_report.x *= POINTER_UP_SCALE;
-        mouse_report.y *= POINTER_UP_SCALE;
-    }
-    return mouse_report;
+  mouse_report.x = easeInOut(mouse_report.x);
+  mouse_report.y = easeInOut(mouse_report.y);
+  if (layer_state_is(_LOWER)) {
+    mouse_report.x *= POINTER_UP_SCALE;
+    mouse_report.y *= POINTER_UP_SCALE;
+  }
+  return mouse_report;
 }
