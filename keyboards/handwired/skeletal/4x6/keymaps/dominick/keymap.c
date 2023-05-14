@@ -74,16 +74,6 @@ layer_state_t layer_state_set_user(layer_state_t state) {
   }
 }
 
-bool encoder_update_user(uint8_t index, bool clockwise) {
-  if (layer_state_is(_RAISE)) {
-    //tap_code(!clockwise ? KC_PAUSE : KC_SCROLLLOCK);
-    tap_code(clockwise ? KC_BRIGHTNESS_DOWN : KC_BRIGHTNESS_UP);
-  } else {
-    tap_code(clockwise ? KC_VOLD : KC_VOLU);
-  }
-  return true;
-}
-
 extern rgblight_config_t rgblight_config;
 int RGB_current_mode;
 
@@ -127,18 +117,33 @@ void matrix_init_user(void) {
 };
 
 // mouse_report is a signed int from -127 to 127
-int easeInOut(int n) {
+int easeInOut(int n, int downScale) {
   float p = (float) abs(n)/POINTER_BASE;
   float f = (p - 1);
   int out = (int)(POINTER_BASE*(f*f*f*(1 - p) + 1));
   if(n<0) out = -1*out;
-  out = (int) (out/POINTER_DOWN_SCALE);
+  out = (int) (out/downScale);
   return out;
 }
 
+int pointerDownScale = POINTER_DOWN_SCALE;
+bool encoder_update_user(uint8_t index, bool clockwise) {
+  if (layer_state_is(_LOWER)) {
+    // adjust joystick mouse sensitivity
+    pointerDownScale += clockwise ? -1 : 1;
+    if(pointerDownScale < 1) pointerDownScale = 1;
+  } else if (layer_state_is(_RAISE)) {
+    //tap_code(!clockwise ? KC_PAUSE : KC_SCROLLLOCK);
+    tap_code(clockwise ? KC_BRIGHTNESS_DOWN : KC_BRIGHTNESS_UP);
+  } else {
+    tap_code(clockwise ? KC_VOLD : KC_VOLU);
+  }
+  return true;
+}
+
 report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
-  mouse_report.x = easeInOut(mouse_report.x);
-  mouse_report.y = easeInOut(mouse_report.y);
+  mouse_report.x = easeInOut(mouse_report.x, pointerDownScale);
+  mouse_report.y = easeInOut(mouse_report.y, pointerDownScale);
   if (layer_state_is(_LOWER)) {
     mouse_report.x *= POINTER_UP_SCALE;
     mouse_report.y *= POINTER_UP_SCALE;
