@@ -29,6 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define MASTER_RIGHT
 
 #define POINTER_BASE 128
-#define POINTER_DOWN_SCALE 8
-#define POINTER_UP_SCALE 4
+#define POINTER_DOWN_SCALE 12
+#define POINTER_UP_SCALE 3
 #define SEND_STR_DELAY 15
