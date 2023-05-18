@@ -47,7 +47,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_ADJUST] = LAYOUT(
       _______, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,       KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  RESET,
-      _______, KC_PSCR, KC_SCRL, KC_PAUS, KC_INS,  KC_F11,      KC_F12,  KC_PGDN, KC_PGUP, RGB_MOD, _______, _______,
+      _______, KC_PSCR, KC_SCRL, KC_PAUS, KC_INS,  KC_F11,      KC_F12,  KC_PGDN, KC_PGUP, RGB_MOD, _______, RGB_TOG,
       KC_CAPS, _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______, _______,
                         _______, LOWER,   _______, _______,     _______, _______, RAISE,   _______
   ),
@@ -68,7 +68,7 @@ extern rgblight_config_t rgblight_config;
 int RGB_current_mode;
 void matrix_init_user(void) {
   rgblight_enable();
-  rgblight_sethsv(0,255,255);
+  rgblight_sethsv(0, 255, RGBLIGHT_VAL);
   rgblight_mode(9);
 };
 #endif
@@ -151,17 +151,21 @@ int pointerDivisor = POINTER_DIVISOR;
 bool encoder_update_user(uint8_t index, bool clockwise) {
   if (layer_state_is(_LOWER)) {
     // adjust joystick mouse sensitivity
-    pointerDivisor += clockwise ? -1 : 1;
+    pointerDivisor += clockwise ? 1 : -1;
     if(pointerDivisor < 1) pointerDivisor = 1;
   } else if (layer_state_is(_RAISE)) {
-    // native brightness
-    tap_code(clockwise ? KC_BRIGHTNESS_DOWN : KC_BRIGHTNESS_UP);
+    tap_code(clockwise ? KC_BRIGHTNESS_UP : KC_BRIGHTNESS_DOWN);
   } else if(isGuiDown) {
-    // OSX screen brightness
-    tap_code(!clockwise ? KC_PAUSE : KC_SCROLLLOCK);
+    tap_code(clockwise ? KC_PAUSE : KC_SCROLLLOCK); // OSX screen brightness
+  } else if(isShiftDown) {
+    if(clockwise) {
+      rgblight_increase_val();
+    } else {
+      rgblight_decrease_val();
+    }
   } else {
     // volume control
-    tap_code(clockwise ? KC_VOLD : KC_VOLU);
+    tap_code(clockwise ? KC_VOLU : KC_VOLD);
   }
   return true;
 }

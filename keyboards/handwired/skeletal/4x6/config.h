@@ -54,8 +54,8 @@ SCL/D0 [  3] -|      |- [ A2] F5
 #define TAPPING_TERM 300
 
 // Rotary Encoder
-#define ENCODERS_PAD_A { F6 }
-#define ENCODERS_PAD_B { F7 }
+#define ENCODERS_PAD_A { F7 }
+#define ENCODERS_PAD_B { F6 }
 #define ENCODERS_PAD_A_RIGHT { }
 #define ENCODERS_PAD_B_RIGHT { }
 
@@ -65,7 +65,7 @@ SCL/D0 [  3] -|      |- [ A2] F5
 #define ANALOG_JOYSTICK_X_AXIS_PIN F5
 #define ANALOG_JOYSTICK_Y_AXIS_PIN F6
 #define ANALOG_JOYSTICK_CLICK_PIN F7
-#define ANALOG_JOYSTICK_READ_INTERVAL 10
+#define ANALOG_JOYSTICK_READ_INTERVAL 5
 #define ANALOG_JOYSTICK_AXIS_MIN 0
 #define ANALOG_JOYSTICK_AXIS_MAX 1023
 
@@ -73,7 +73,8 @@ SCL/D0 [  3] -|      |- [ A2] F5
 #define RGB_DI_PIN F4
 #ifdef  RGB_DI_PIN
 #define RGBLIGHT_SPLIT
-#define RGBLIGHT_LIMIT_VAL 120
+#define RGBLIGHT_VAL 128
+#define RGBLIGHT_LIMIT_VAL 255
 #define RGBLIGHT_ANIMATIONS
 #define RGBLED_NUM 50
 #define RGBLED_SPLIT {25, 25}

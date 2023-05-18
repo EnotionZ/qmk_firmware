@@ -33,6 +33,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define POINTER_SHIFT_FACTOR 4
 #define SEND_STR_DELAY 15
 
+#define ENCODER_RESOLUTION 4
+
 // Modify these values to adjust the scrolling speed
 #define SCROLL_DIVISOR_H 32.0
 #define SCROLL_DIVISOR_V 32.0
