@@ -70,11 +70,13 @@ SCL/D0 [  3] -|      |- [ A2] F5
 #define ANALOG_JOYSTICK_AXIS_MAX 1023
 
 // WS2812 RGB LED strip input and number of LEDs
-#define RGB_DI_PIN D3
+#define RGB_DI_PIN F4
 #ifdef  RGB_DI_PIN
+#define RGBLIGHT_SPLIT
+#define RGBLIGHT_LIMIT_VAL 120
 #define RGBLIGHT_ANIMATIONS
-#define RGBLED_NUM 16
-#define RGBLED_SPLIT {8, 8}
+#define RGBLED_NUM 50
+#define RGBLED_SPLIT {25, 25}
 #define RGBLIGHT_HUE_STEP 8
 #define RGBLIGHT_SAT_STEP 8
 #define RGBLIGHT_VAL_STEP 8

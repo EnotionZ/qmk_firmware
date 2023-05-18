@@ -29,7 +29,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MASTER_LEFT
 // #define MASTER_RIGHT
 
-#define POINTER_BASE 128
-#define POINTER_DOWN_SCALE 12
-#define POINTER_UP_SCALE 3
+#define POINTER_DIVISOR 4
+#define POINTER_SHIFT_FACTOR 4
 #define SEND_STR_DELAY 15
+
+// Modify these values to adjust the scrolling speed
+#define SCROLL_DIVISOR_H 32.0
+#define SCROLL_DIVISOR_V 32.0

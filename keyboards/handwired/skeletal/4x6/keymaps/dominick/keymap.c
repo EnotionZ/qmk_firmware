@@ -60,9 +60,18 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 };
 
+bool isShiftDown = false;
+bool isGuiDown = false;
+
+#ifdef RGBLIGHT_ENABLE
 extern rgblight_config_t rgblight_config;
 int RGB_current_mode;
-bool isShiftPressed = false;
+void matrix_init_user(void) {
+  rgblight_enable();
+  rgblight_sethsv(0,255,255);
+  rgblight_mode(9);
+};
+#endif
 
 layer_state_t layer_state_set_user(layer_state_t state) {
   if(IS_LAYER_ON(_LOWER) || IS_LAYER_ON(_RAISE)) {
@@ -107,11 +116,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     case KC_LSFT:;
     case KC_RSFT:;
-      isShiftPressed = keydown;
+      isShiftDown = keydown;
+      break;
+
+    case KC_LGUI:;
+    case KC_RGUI:;
+      isGuiDown = keydown;
       break;
 
     case KC_BTN1:;
-      click(isShiftPressed ? MOUSE_BTN2 : MOUSE_BTN1, keydown);
+      click(isShiftDown ? MOUSE_BTN2 : MOUSE_BTN1, keydown);
       break;
 
     case KC_BTN2:;
@@ -132,47 +146,55 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   return true;
 }
 
-void matrix_init_user(void) {
-  rgblight_enable();
-  rgblight_sethsv(0,255,255);
-  rgblight_mode(9);
-};
+int pointerDivisor = POINTER_DIVISOR;
 
-// mouse_report is a signed int from -127 to 127
-int easeInOut(int n, int downScale) {
-  float p = (float) abs(n)/POINTER_BASE;
-  float f = (p - 1);
-  int out = (int)(POINTER_BASE*(f*f*f*(1 - p) + 1));
-  if(n<0) out = -1*out;
-  out = (int) (out/downScale);
-  return out;
-}
-
-int pointerDownScale = POINTER_DOWN_SCALE;
 bool encoder_update_user(uint8_t index, bool clockwise) {
   if (layer_state_is(_LOWER)) {
     // adjust joystick mouse sensitivity
-    pointerDownScale += clockwise ? -1 : 1;
-    if(pointerDownScale < 1) pointerDownScale = 1;
+    pointerDivisor += clockwise ? -1 : 1;
+    if(pointerDivisor < 1) pointerDivisor = 1;
   } else if (layer_state_is(_RAISE)) {
-    if(isShiftPressed) {
-      tap_code(clockwise ? KC_BRIGHTNESS_DOWN : KC_BRIGHTNESS_UP);
-    } else {
-      tap_code(!clockwise ? KC_PAUSE : KC_SCROLLLOCK);
-    }
-
+    // native brightness
+    tap_code(clockwise ? KC_BRIGHTNESS_DOWN : KC_BRIGHTNESS_UP);
+  } else if(isGuiDown) {
+    // OSX screen brightness
+    tap_code(!clockwise ? KC_PAUSE : KC_SCROLLLOCK);
   } else {
+    // volume control
     tap_code(clockwise ? KC_VOLD : KC_VOLU);
   }
   return true;
 }
 
+// Variables to store accumulated scroll values
+float scroll_accumulated_h = 0;
+float scroll_accumulated_v = 0;
+
 report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
-  mouse_report.x = easeInOut(mouse_report.x, pointerDownScale);
-  mouse_report.y = easeInOut(mouse_report.y, pointerDownScale);
+  mouse_report.x = (int) mouse_report.x/pointerDivisor;
+  mouse_report.y = (int) mouse_report.y/pointerDivisor;
+
+  if (isShiftDown) {
+    mouse_report.x *= POINTER_SHIFT_FACTOR;
+    mouse_report.y *= POINTER_SHIFT_FACTOR;
+  }
+
   if (layer_state_is(_LOWER)) {
-    mouse_report.x *= POINTER_UP_SCALE;
-    mouse_report.y *= POINTER_UP_SCALE;
+    // Calculate and accumulate scroll values based on mouse movement and divisors
+    scroll_accumulated_h += (float) mouse_report.x / SCROLL_DIVISOR_H;
+    scroll_accumulated_v += (float) mouse_report.y / SCROLL_DIVISOR_V;
+
+    // Assign integer parts of accumulated scroll values to the mouse report
+    mouse_report.h = (int8_t)scroll_accumulated_h;
+    mouse_report.v = (int8_t)scroll_accumulated_v;
+
+    // Update accumulated scroll values by subtracting the integer parts
+    scroll_accumulated_h -= (int8_t)scroll_accumulated_h;
+    scroll_accumulated_v -= (int8_t)scroll_accumulated_v;
+
+    // Clear the X and Y values of the mouse report
+    mouse_report.x = 0;
+    mouse_report.y = 0;
   }
   return mouse_report;
 }
