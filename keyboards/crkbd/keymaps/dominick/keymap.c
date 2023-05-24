@@ -166,15 +166,21 @@ bool oled_task_user(void) {
 
 
 
+bool isShiftDown = false;
+bool isLshiftDown = false;
+bool isRshiftDown = false;
+bool isGuiDown = false;
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   if (record->event.pressed) {
     set_keylog(keycode, record);
   }
 
+  bool keydown = record->event.pressed;
+
   switch (keycode) {
     case CTLTB:
-      if (record->event.pressed) {
+      if (keydown) {
         // if lower, shift, or gui is down, sent tab
         if(layer_state_is(_LOWER) || keyboard_report->mods & MOD_BIT(KC_LSFT) || keyboard_report->mods & MOD_BIT(KC_LGUI)) {
           register_code(KC_TAB);
@@ -191,21 +197,35 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       break;
 
     case PWD1P:
-      if (record->event.pressed) {
-        send_string_with_delay_P(PSTR(CPWD1P SS_TAP(X_ENT)), 15);
+      if (keydown) {
+        send_string_with_delay_P(PSTR(CPWD1P SS_TAP(X_ENT)), SEND_STR_DELAY);
       }
       break;
 
     case PWDAA:
-      if (record->event.pressed) {
-        send_string_with_delay_P(PSTR(CPWDAA SS_TAP(X_ENT)), 30);
+      if (keydown) {
+        send_string_with_delay_P(PSTR(CPWDAA SS_TAP(X_ENT)), SEND_STR_DELAY);
       }
       break;
 
     case PWDME:
-      if (record->event.pressed) {
-        send_string_with_delay_P(PSTR(CPWDME), 15);
+      if (keydown) {
+        send_string_with_delay_P(PSTR(CPWDME), SEND_STR_DELAY);
       }
+      break;
+
+    case KC_LSFT:;
+      isLshiftDown = keydown;
+      isShiftDown = keydown;
+      break;
+    case KC_RSFT:;
+      isRshiftDown = keydown;
+      isShiftDown = keydown;
+      break;
+
+    case KC_LGUI:;
+    case KC_RGUI:;
+      isGuiDown = keydown;
       break;
   }
 

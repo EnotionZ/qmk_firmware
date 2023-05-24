@@ -31,6 +31,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define MASTER_RIGHT
 // #define EE_HANDS
 
+#define SEND_STR_DELAY 15
+
 #define ENCODERS_PAD_A { B5 }
 #define ENCODERS_PAD_B { B4 }
 

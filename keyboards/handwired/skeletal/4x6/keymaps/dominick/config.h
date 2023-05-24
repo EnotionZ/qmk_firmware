@@ -38,3 +38,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Modify these values to adjust the scrolling speed
 #define SCROLL_DIVISOR_H 32.0
 #define SCROLL_DIVISOR_V 32.0
+
+#define RGBLIGHT_EFFECT_RAINBOW_SWIRL
+#define RGBLIGHT_DEFAULT_MODE RGBLIGHT_MODE_RAINBOW_SWIRL
+#define RGBLIGHT_DEFAULT_HUE 0
+#define RGBLIGHT_DEFAULT_SAT 255
+#define RGBLIGHT_DEFAULT_VAL 128
+#define RGBLIGHT_DEFAULT_SPD 0

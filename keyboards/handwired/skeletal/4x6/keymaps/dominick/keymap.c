@@ -13,6 +13,7 @@ enum custom_keycodes {
   PWD1P = SAFE_RANGE,
   PWDAA,
   PWDME,
+  TD_CGUI,
 };
 
 #define LOWER   MO(_LOWER)
@@ -28,7 +29,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_GESC, KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,        KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSLS,
       CTLTAB,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,        KC_H,    KC_J,    KC_K,    KC_L,    CTLSCLN, KC_ENT,
       KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,        KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
-                        KC_MUTE, LOWER,   KC_SPC,  KC_LGUI,     KC_RALT, GUIBSPC, RAISE,   _______
+                        KC_MUTE, LOWER,   KC_SPC,  KC_LGUI,     KC_LALT, GUIBSPC, RAISE,   _______
   ),
 
   [_LOWER] = LAYOUT(
@@ -56,22 +57,21 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       _______, _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______, _______,
       KC_TAB,  _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______, _______,
       _______, _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______, _______,
-                        _______, LOWER,   _______, KC_LCTL,     _______, _______, RAISE,   _______
+                        _______, LOWER,   _______, TD_CGUI,     _______, _______, RAISE,   _______
   ),
 };
 
 bool isShiftDown = false;
+bool isLshiftDown = false;
+bool isRshiftDown = false;
 bool isGuiDown = false;
 
-#ifdef RGBLIGHT_ENABLE
+bool isTDCtlDown = false;
+bool isTDGuiDown = false;
+uint16_t prevCtlTime = 0;
+
 extern rgblight_config_t rgblight_config;
 int RGB_current_mode;
-void matrix_init_user(void) {
-  rgblight_enable();
-  rgblight_sethsv(0, 255, RGBLIGHT_VAL);
-  rgblight_mode(9);
-};
-#endif
 
 layer_state_t layer_state_set_user(layer_state_t state) {
   if(IS_LAYER_ON(_LOWER) || IS_LAYER_ON(_RAISE)) {
@@ -114,8 +114,34 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       break;
 
+    case TD_CGUI: // custom tap dance
+      if(keydown) {
+        uint16_t diffWithin = TIMER_DIFF_16(record->event.time, prevCtlTime) < TAPPING_TERM;
+        if(!isTDCtlDown && !diffWithin) {
+          prevCtlTime = record->event.time;
+          register_code(KC_LCTL);
+          isTDCtlDown = true;
+        } else {
+          register_code(KC_LGUI);
+          isTDGuiDown = true;
+        }
+      } else {
+        if(isTDCtlDown) {
+          unregister_code(KC_LCTL);
+          isTDCtlDown = false;
+        } else if(isTDGuiDown) {
+          unregister_code(KC_LGUI);
+          isTDGuiDown = false;
+        }
+      }
+      break;
+
     case KC_LSFT:;
+      isLshiftDown = keydown;
+      isShiftDown = keydown;
+      break;
     case KC_RSFT:;
+      isRshiftDown = keydown;
       isShiftDown = keydown;
       break;
 
@@ -157,11 +183,17 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
     tap_code(clockwise ? KC_BRIGHTNESS_UP : KC_BRIGHTNESS_DOWN);
   } else if(isGuiDown) {
     tap_code(clockwise ? KC_PAUSE : KC_SCROLLLOCK); // OSX screen brightness
-  } else if(isShiftDown) {
+  } else if(isRshiftDown) {
     if(clockwise) {
       rgblight_increase_val();
     } else {
       rgblight_decrease_val();
+    }
+  } else if(isLshiftDown) {
+    if(clockwise) {
+      rgblight_increase_speed();
+    } else {
+      rgblight_decrease_speed();
     }
   } else {
     // volume control
