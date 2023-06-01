@@ -13,10 +13,11 @@ enum custom_keycodes {
   PWD1P = SAFE_RANGE,
   PWDAA,
   PWDME,
-  TD_CGUI,
-  TD_GLWR,
-  TD_ALTQ,
   GUI_ALT,
+  CTL_RSE,
+  LWR_GUI,
+  TD_ALTQ,
+  GUI_CTL,
 };
 
 #define LOWER   MO(_LOWER)
@@ -32,7 +33,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_GESC, KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,        KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSLS,
       CTLTAB,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,        KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_ENT,
       KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,        KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
-                        KC_MUTE, LOWER,   KC_SPC,  KC_LGUI,     TD_ALTQ, GUIBSPC, RAISE,   _______
+                        KC_MUTE, LOWER,   KC_SPC,  GUI_CTL,     KC_LALT, GUIBSPC, RAISE,   _______
   ),
 
   [_LOWER] = LAYOUT(
@@ -60,7 +61,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       _______, _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______, _______,
       KC_TAB,  _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______, _______,
       _______, _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______, _______,
-                        _______, TD_GLWR, _______, TD_CGUI,     _______, _______, RAISE,   _______
+                        _______, LWR_GUI, _______, CTL_RSE,     _______, _______, RAISE,   _______
   ),
 };
 
@@ -98,33 +99,41 @@ void click(uint16_t mouseBtn, bool pressed) {
 #define TD_NULL 2
 #define TD_DBLTAP_ON 1
 #define TD_DBLTAP_OFF 0
-int handle_tapdance(keyrecord_t *record, uint16_t downKeycode, uint16_t dbltapKeycode, bool isLayer) {
+int handle_tapdance(keyrecord_t *record, uint16_t downKeycode, bool isKey1Layer, uint16_t dbltapKeycode, bool isKey2Layer) {
   if(record->event.pressed) {
     uint16_t diffWithin = TIMER_DIFF_16(record->event.time, prevTapdanceTime) < TAPPING_TERM;
     if(!isTapdanceKey1Down && !diffWithin) {
       isTapdanceKey1Down = true;
       prevTapdanceTime = record->event.time;
-      if(isLayer) {
+      if(isKey1Layer) {
         layer_on(downKeycode);
       } else {
         register_code(downKeycode);
       }
     } else {
       isTapdanceKey2Down = true;
-      register_code(dbltapKeycode);
+      if(isKey2Layer) {
+        layer_on(dbltapKeycode);
+      } else {
+        register_code(dbltapKeycode);
+      }
       return TD_DBLTAP_ON;
     }
   } else {
     if(isTapdanceKey1Down) {
       isTapdanceKey1Down = false;
-      if(isLayer) {
+      if(isKey1Layer) {
         layer_off(downKeycode);
       } else {
         unregister_code(downKeycode);
       }
     } else if(isTapdanceKey2Down) {
       isTapdanceKey2Down = false;
-      unregister_code(dbltapKeycode);
+      if(isKey2Layer) {
+        layer_off(dbltapKeycode);
+      } else {
+        unregister_code(dbltapKeycode);
+      }
       return TD_DBLTAP_OFF;
     }
   }
@@ -165,7 +174,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     // quip header files
     case TD_ALTQ:;
-      int tdOut = handle_tapdance(record, KC_LALT, KC_RGUI, false);
+      int tdOut = handle_tapdance(record, KC_LALT, false, KC_RGUI, false);
       if(tdOut == TD_DBLTAP_ON) {
         register_code(KC_RALT);
         layer_on(_LOWER);
@@ -175,12 +184,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       break;
 
-    case TD_GLWR:
-      handle_tapdance(record, _LOWER, KC_LGUI, true);
+    case GUI_CTL:
+      handle_tapdance(record, KC_LGUI, false, KC_LCTL, false);
       break;
 
-    case TD_CGUI:
-      handle_tapdance(record, KC_LCTL, KC_LGUI, false);
+    case LWR_GUI:
+      handle_tapdance(record, _LOWER, true, KC_LGUI, false);
+      break;
+
+    case CTL_RSE:
+      handle_tapdance(record, KC_LCTL, false, _RAISE, true);
       break;
 
     case KC_LSFT:;
