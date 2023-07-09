@@ -2,6 +2,7 @@
 #include "joystick.h"
 #include "analog.h"
 #include "shared.h"
+#include "time.h"
 
 enum layers {
   _QWERTY = 0,
@@ -14,7 +15,7 @@ enum custom_keycodes {
   PWD1P = SAFE_RANGE,
   PWDAA,
   PWDME,
-  GUI_CTL,
+  TD_LWRG,
 };
 
 #define LOWER   MO(_LOWER)
@@ -22,34 +23,36 @@ enum custom_keycodes {
 #define ADJUST  MO(_ADJUST)
 #define GUIBSPC MT(MOD_RGUI, KC_BSPC)
 #define CTLTAB  MT(MOD_LCTL, KC_TAB)
+#define MIN_ALT MT(MOD_RALT, KC_MINS)
+#define KC_BALT MT(MOD_RALT, KC_B)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_QWERTY] = LAYOUT(
-      KC_GESC, KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,        KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSLS, KC_TRNS,
+      KC_GESC, KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,        KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_EQL,  KC_BSLS,
       CTLTAB,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,        KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_ENT,
-      KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,        KC_RALT, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
-      KC_LCTL, KC_LGUI,          LOWER,   KC_SPC,                        GUIBSPC, RAISE,                     KC_RALT, KC_RGUI
+      KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,        KC_BALT, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
+      KC_LCTL, KC_LGUI,          TD_LWRG, KC_SPC,                        GUIBSPC, RAISE,                     KC_RALT, KC_RGUI
   ),
 
   [_LOWER] = LAYOUT(
-      KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,        KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    _______, KC_TRNS,
+      KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,        KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    _______, _______,
       KC_TAB,  _______, _______, KC_INS,  KC_ENT,  PWD1P,       _______, KC_LCBR, KC_RCBR, KC_LBRC, KC_RBRC, _______,
       KC_TRNS, KC_BSPC, KC_DEL,  KC_BTN1, PWDME,   PWDAA,       _______, KC_BSPC, KC_MINS, KC_EQL,  KC_UNDS, _______, _______,
-      _______, _______,          LOWER,   _______,                       _______, RAISE,                     _______, _______
+      _______, _______,          TD_LWRG, _______,                       _______, RAISE,                     _______, _______
   ),
 
   [_RAISE] = LAYOUT(
-      KC_GRV,  KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,     KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_DEL,  KC_TRNS,
+      KC_GRV,  KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,     KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, _______, KC_DEL,
       _______, _______, _______, _______, _______, _______,     KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_QUOT, _______,
       _______, _______, _______, _______, _______, _______,     _______, KC_MPLY, KC_VOLD, KC_VOLU, KC_MPRV, KC_MNXT, KC_MUTE,
-      _______, _______,          LOWER,   KC_LCTL,                       _______, RAISE,                     _______, _______
+      _______, _______,          TD_LWRG, KC_LCTL,                       _______, RAISE,                     _______, _______
   ),
 
   [_ADJUST] = LAYOUT(
-      _______, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,       KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  RESET,   KC_TRNS,
+      _______, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,       KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  _______, RESET,
       _______, KC_PSCR, KC_SCRL, KC_PAUS, KC_INS,  KC_F11,      KC_F12,  KC_PGDN, KC_PGUP, _______, _______, _______,
       KC_CAPS, _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______, _______, _______,
-      _______, _______,          LOWER,   _______,                       _______, RAISE,                     _______, _______
+      _______, _______,          TD_LWRG, _______,                       _______, RAISE,                     _______, _______
   ),
 };
 
@@ -68,6 +71,29 @@ layer_state_t layer_state_set_user(layer_state_t state) {
   } else {
     return state;
   }
+}
+
+uint32_t lastThrottle = 0;
+bool joystickThrottleCheck(void) {
+  if(timer_elapsed32(lastThrottle) < JOYSTICK_HOLD_THROTTLE) {
+    return false;
+  }
+  lastThrottle = timer_read32();
+  return true;
+}
+
+bool joystickHasReset = true;
+bool joystickCanFire(int y) {
+  if(y == 0) {
+    joystickHasReset = true;
+    return false;
+  }
+
+  if(joystickHasReset) {
+    joystickHasReset = false;
+    return joystickThrottleCheck();
+  }
+  return false;
 }
 
 /**
@@ -150,8 +176,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       break;
 
-    case GUI_CTL:
-      handle_tapdance(record, KC_LGUI, false, KC_LCTL, false);
+    case TD_LWRG:
+      handle_tapdance(record, LOWER, true, KC_LCTL, false);
       break;
 
     case KC_LSFT:;
@@ -201,8 +227,10 @@ report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
 
   if(isGuiDown) {
     // hold GUI for brightness
-    if(mouse_report.y > 0) tap_code(KC_BRIGHTNESS_UP);
-    if(mouse_report.y < 0) tap_code(KC_BRIGHTNESS_DOWN);
+    if(joystickCanFire(mouse_report.y)) {
+      if(mouse_report.y < 0) tap_code(KC_BRIGHTNESS_UP);
+      if(mouse_report.y > 0) tap_code(KC_BRIGHTNESS_DOWN);
+    }
     mouse_report.x = 0;
     mouse_report.y = 0;
   } else if (isShiftDown) {
