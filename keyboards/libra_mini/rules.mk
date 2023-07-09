@@ -1,0 +1,4 @@
+JOYSTICK_ENABLE = yes
+JOYSTICK_DRIVER = analog
+BOOTMAGIC_ENABLE = yes
+SRC += analog.c
