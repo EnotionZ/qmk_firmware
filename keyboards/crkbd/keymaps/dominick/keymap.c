@@ -15,6 +15,8 @@ enum custom_keycodes {
   PWD1P,
   PWDAA,
   PWDME,
+  PWDEV,
+  TD_LWRC,
   CTLTB,
 };
 
@@ -27,29 +29,29 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_GESC, KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                      KC_Y,    KC_U,    KC_I,    KC_O,   KC_P,    KC_BSLS,
       CTLTAB,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                      KC_H,    KC_J,    KC_K,    KC_L,   KC_SCLN, KC_ENT,
       KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                      KC_N,    KC_M,    KC_COMM, KC_DOT, KC_SLSH, KC_RSFT,
-                                          KC_LGUI, LOWER,   KC_SPC,  KC_BSPC, RAISE,   KC_RALT
+                                          KC_LGUI, TD_LWRC,  KC_SPC,  KC_BSPC, RAISE,   KC_RALT
 
   ),
 
   [_LOWER] = LAYOUT(
       KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                      KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    _______,
-      KC_TAB,  _______, _______, _______, KC_ENT,  PWD1P,                     _______, KC_LCBR, KC_RCBR, KC_LBRC, KC_RBRC, _______,
-      _______, KC_BSPC, KC_DEL,  _______, PWDME,   PWDAA,                     _______, KC_MINS, KC_EQL,  KC_UNDS, KC_PLUS, _______,
-                                          KC_LALT, LOWER,   KC_RGUI, _______, RAISE,   _______
+      KC_TAB,  PWDEV,   _______, KC_INS,  KC_ENT,  PWD1P,                     _______, KC_LCBR, KC_RCBR, KC_LBRC, KC_RBRC, _______,
+      KC_TRNS, KC_BSPC, KC_DEL,  _______, PWDME,   PWDAA,                     _______, KC_MINS, KC_EQL,  KC_UNDS, KC_PLUS, _______,
+                                          KC_LALT, TD_LWRC,  KC_RGUI, _______, RAISE,   _______
     ),
 
   [_RAISE] = LAYOUT(
       KC_GRV,  KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,                   KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_DEL,
       _______, _______, _______, _______, _______, _______,                   KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_QUOT, KC_MUTE,
       _______, _______, _______, _______, _______, _______,                   KC_MPRV, KC_VOLD, KC_VOLU, KC_MPLY, KC_MNXT, _______,
-                                          _______, LOWER,   _______, _______, RAISE,   KC_RGUI
+                                          _______, TD_LWRC,  _______, _______, RAISE,   KC_RGUI
   ),
 
   [_ADJUST] = LAYOUT(
       _______, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                     KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  RESET,
       _______, KC_PSCR, KC_SCRL, KC_PAUS, KC_INS,  KC_F11,                    KC_F12,  KC_PGDN, KC_PGUP, _______, _______, _______,
       KC_CAPS, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
-                                          _______, LOWER,   _______, _______, RAISE,   _______
+                                          _______, TD_LWRC,  _______, _______, RAISE,   _______
   )
 };
 
@@ -165,6 +167,55 @@ bool oled_task_user(void) {
 }
 
 
+#define TD_NULL 2
+#define TD_DBLTAP_ON 1
+#define TD_DBLTAP_OFF 0
+
+bool isTapdanceKey1Down = false;
+bool isTapdanceKey2Down = false;
+uint16_t prevTapdanceTime = 0;
+
+int handle_tapdance(keyrecord_t *record, uint16_t downKeycode, bool isKey1Layer, uint16_t dbltapKeycode, bool isKey2Layer) {
+  if(record->event.pressed) {
+    uint16_t diffWithin = TIMER_DIFF_16(record->event.time, prevTapdanceTime) < TAPPING_TERM;
+    if(!isTapdanceKey1Down && !diffWithin) {
+      isTapdanceKey1Down = true;
+      prevTapdanceTime = record->event.time;
+      if(isKey1Layer) {
+        layer_on(downKeycode);
+      } else {
+        register_code(downKeycode);
+      }
+    } else {
+      isTapdanceKey2Down = true;
+      if(isKey2Layer) {
+        layer_on(dbltapKeycode);
+      } else {
+        register_code(dbltapKeycode);
+      }
+      return TD_DBLTAP_ON;
+    }
+  } else {
+    if(isTapdanceKey1Down) {
+      isTapdanceKey1Down = false;
+      if(isKey1Layer) {
+        layer_off(downKeycode);
+      } else {
+        unregister_code(downKeycode);
+      }
+    } else if(isTapdanceKey2Down) {
+      isTapdanceKey2Down = false;
+      if(isKey2Layer) {
+        layer_off(dbltapKeycode);
+      } else {
+        unregister_code(dbltapKeycode);
+      }
+      return TD_DBLTAP_OFF;
+    }
+  }
+  return TD_NULL;
+}
+
 
 bool isShiftDown = false;
 bool isLshiftDown = false;
@@ -212,6 +263,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       if (keydown) {
         send_string_with_delay_P(PSTR(CPWDME), SEND_STR_DELAY);
       }
+      break;
+
+    case PWDEV:
+      if (keydown) {
+        send_string_with_delay_P(PSTR(CPWDEV SS_TAP(X_ENT)), SEND_STR_DELAY);
+      }
+      break;
+
+    case TD_LWRC:
+      handle_tapdance(record, LOWER, true, KC_LCTL, false);
       break;
 
     case KC_LSFT:;

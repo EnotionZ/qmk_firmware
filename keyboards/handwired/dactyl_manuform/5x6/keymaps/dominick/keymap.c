@@ -13,6 +13,7 @@ enum custom_keycodes {
   PWD1P = SAFE_RANGE,
   PWDAA,
   PWDME,
+  PWDEV,
   CTLTB,
 };
 
@@ -51,12 +52,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_LOWER] = LAYOUT_5x6(
      KC_F11,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,         KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F12,
      KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,          KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    _______,
-     KC_TAB,  _______, _______, KC_ENT,  KC_INS,  PWD1P,         _______, KC_LCBR, KC_RCBR, KC_LBRC, KC_RBRC, _______,
+     KC_TAB,  PWDEV,   _______, KC_INS,  KC_ENT,  PWD1P,         _______, KC_LCBR, KC_RCBR, KC_LBRC, KC_RBRC, _______,
      KC_TRNS, KC_BSPC, KC_DEL,  FN_ROW,  PWDME,   PWDAA,         _______, KC_MINS, KC_EQL,  KC_UNDS, KC_PLUS, _______,
                        _______, _______,                                           _______, _______,
                                          _______, KC_TRNS,       KC_TRNS, _______,
                                          _______, _______,       _______, KC_SPC,
-                                         KC_ENT,  _______,       _______, _______
+                                         _______, _______,       _______, _______
   ),
 
   [_RAISE] = LAYOUT_5x6(
@@ -148,6 +149,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case PWDME:
       if (record->event.pressed) {
         send_string_with_delay_P(PSTR(CPWDME), 15);
+      }
+      break;
+
+    case PWDEV:
+      if (keydown) {
+        send_string_with_delay_P(PSTR(CPWDEV SS_TAP(X_ENT)), SEND_STR_DELAY);
       }
       break;
 
