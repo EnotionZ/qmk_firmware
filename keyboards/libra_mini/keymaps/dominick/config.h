@@ -19,7 +19,7 @@
 #define POINTER_SHIFT_FACTOR 3
 
 // if holding down to fire tap
-#define JOYSTICK_HOLD_THROTTLE 100
+#define JOYSTICK_HOLD_THROTTLE 120
 
 // Modify these values to adjust the scrolling speed
 #define SCROLL_DIVISOR_H 32.0

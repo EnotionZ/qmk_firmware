@@ -136,24 +136,24 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     case PWD1P:
       if (record->event.pressed) {
-        send_string_with_delay_P(PSTR(CPWD1P SS_TAP(X_ENT)), 15);
+        send_string_with_delay_P(PSTR(CPWD1P SS_TAP(X_ENT)), SEND_STR_DELAY);
       }
       break;
 
     case PWDAA:
       if (record->event.pressed) {
-        send_string_with_delay_P(PSTR(CPWDAA SS_TAP(X_ENT)), 30);
+        send_string_with_delay_P(PSTR(CPWDAA SS_TAP(X_ENT)), SEND_STR_DELAY);
       }
       break;
 
     case PWDME:
       if (record->event.pressed) {
-        send_string_with_delay_P(PSTR(CPWDME), 15);
+        send_string_with_delay_P(PSTR(CPWDME), SEND_STR_DELAY);
       }
       break;
 
     case PWDEV:
-      if (keydown) {
+      if (record->event.pressed) {
         send_string_with_delay_P(PSTR(CPWDEV SS_TAP(X_ENT)), SEND_STR_DELAY);
       }
       break;

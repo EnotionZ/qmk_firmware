@@ -24,7 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define MASTER_LEFT
 #define MASTER_LEFT
 //#define EE_HANDS
-// Rows are doubled-up
+
+#define SEND_STR_DELAY 15
 
 // https://deskthority.net/wiki/Arduino_Pro_Micro
 // use AVR names
