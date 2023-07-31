@@ -28,6 +28,7 @@ enum custom_keycodes {
 #define GUIBSPC MT(MOD_RGUI, KC_BSPC)
 #define CTLSCLN MT(MOD_LCTL, KC_SCLN)
 #define CTLTAB  MT(MOD_LCTL, KC_TAB)
+#define GUITAB  MT(MOD_LGUI, KC_TAB)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_QWERTY] = LAYOUT(
@@ -41,28 +42,28 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,        KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    _______,
       KC_TAB,  PWDEV,   _______, KC_INS,  KC_ENT,  PWD1P,       GUI_ALT, KC_LCBR, KC_RCBR, KC_LBRC, KC_RBRC, _______,
       KC_TRNS, KC_BSPC, KC_DEL,  KC_BTN1, PWDME,   PWDAA,       KC_BSPC, KC_MINS, KC_EQL,  KC_UNDS, CTRLMDE, _______,
-                        _______, LOWER,   KC_TRNS, _______,     _______, KC_TRNS, RAISE,   _______
+                        _______, LOWER,   KC_SPC,  _______,     _______, KC_BSPC, RAISE,   _______
   ),
 
   [_RAISE] = LAYOUT(
       KC_GRV,  KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,     KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_DEL,
       _______, _______, _______, _______, KC_BTN1, _______,     KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_QUOT, _______,
       _______, _______, _______, CTRLMDE, _______, _______,     KC_MPLY, KC_VOLD, KC_VOLU, KC_MPRV, KC_MNXT, KC_MUTE,
-                        _______, LOWER,   KC_LCTL, _______,     _______, KC_TRNS, RAISE,   _______
+                        _______, LOWER,   KC_SPC,  _______,     _______, GUIBSPC, RAISE,   _______
   ),
 
   [_ADJUST] = LAYOUT(
       _______, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,       KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  RESET,
       _______, KC_PSCR, KC_SCRL, KC_PAUS, KC_INS,  KC_F11,      KC_F12,  KC_PGDN, KC_PGUP, RGB_MOD, _______, RGB_TOG,
       KC_CAPS, _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______, _______,
-                        _______, LOWER,   _______, _______,     _______, _______, RAISE,   _______
+                        _______, LOWER,   KC_SPC,  _______,     _______, GUIBSPC, RAISE,   _______
   ),
 
   [_CTRL] = LAYOUT(
       _______, _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______, _______,
-      KC_TAB,  _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______, _______,
+      GUITAB,  _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______, _______,
       _______, _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______, _______,
-                        _______, LWR_GUI, _______, CTL_RSE,     _______, _______, RAISE,   _______
+                        _______, LWR_GUI, KC_SPC,  CTL_RSE,     _______, GUIBSPC, RAISE,   _______
   ),
 };
 
