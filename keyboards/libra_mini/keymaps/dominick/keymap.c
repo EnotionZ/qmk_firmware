@@ -172,7 +172,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     case PWDME:
       if (keydown) {
-        send_string_with_delay_P(PSTR(CPWDME), SEND_STR_DELAY);
+        send_string_with_delay_P(PSTR(CPWDME SS_TAP(X_ENT)), SEND_STR_DELAY);
       }
       break;
 
@@ -240,8 +240,8 @@ report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
     // disable mouse
     mouse_report.x = 0;
     mouse_report.y = 0;
-  } else if (layer_state_is(_RAISE)) {
-    // hold raise for volume
+  } else if (layer_state_is(_LOWER)) {
+    // hold LOWER for volume
     if(joystickCanFire(mouse_report.y)) {
       if(mouse_report.y < 0) tap_code(KC_VOLU);
       if(mouse_report.y > 0) tap_code(KC_VOLD);
@@ -253,8 +253,8 @@ report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
     // hold SHIFT to move faster
     mouse_report.x *= POINTER_SHIFT_FACTOR;
     mouse_report.y *= POINTER_SHIFT_FACTOR;
-  } else if (layer_state_is(_LOWER)) {
-    // hold LOWER to scroll
+  } else if (layer_state_is(_RAISE)) {
+    // hold RAISE to scroll
 
     // Calculate and accumulate scroll values based on mouse movement and divisors
     scroll_accumulated_h += (float) mouse_report.x / SCROLL_DIVISOR_H;

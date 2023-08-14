@@ -15,13 +15,13 @@ enum custom_keycodes {
   PWDME,
   PWDEV,
   CTLTB,
+  MACDEL,
 };
 
 
 #define LOWER MO(_LOWER)
 #define RAISE MO(_RAISE)
 #define ADJUST MO(_ADJUST)
-#define FN_ROW TG(_FN)
 #define CTLTAB MT(MOD_LCTL, KC_TAB)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -52,8 +52,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_LOWER] = LAYOUT_5x6(
      KC_F11,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,         KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F12,
      KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,          KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    _______,
-     KC_TAB,  PWDEV,   _______, KC_INS,  KC_ENT,  PWD1P,         _______, KC_LCBR, KC_RCBR, KC_LBRC, KC_RBRC, _______,
-     KC_TRNS, KC_BSPC, KC_DEL,  FN_ROW,  PWDME,   PWDAA,         _______, KC_MINS, KC_EQL,  KC_UNDS, KC_PLUS, _______,
+     KC_TAB,  PWDEV,   MACDEL,  KC_INS,  KC_ENT,  PWD1P,         _______, KC_LCBR, KC_RCBR, KC_LBRC, KC_RBRC, _______,
+     KC_TRNS, KC_BSPC, KC_DEL,  _______,  PWDME,   PWDAA,         _______, KC_MINS, KC_EQL,  KC_UNDS, KC_PLUS, _______,
                        _______, _______,                                           _______, _______,
                                          _______, KC_TRNS,       KC_TRNS, _______,
                                          _______, _______,       _______, KC_SPC,
@@ -148,7 +148,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     case PWDME:
       if (record->event.pressed) {
-        send_string_with_delay_P(PSTR(CPWDME), SEND_STR_DELAY);
+        send_string_with_delay_P(PSTR(CPWDME SS_TAP(X_ENT)), SEND_STR_DELAY);
       }
       break;
 
@@ -156,6 +156,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       if (record->event.pressed) {
         send_string_with_delay_P(PSTR(CPWDEV SS_TAP(X_ENT)), SEND_STR_DELAY);
       }
+      break;
+
+    case MACDEL:
+      if (record->event.pressed) {
+        register_code(KC_LGUI);
+        register_code(KC_BSPC);
+      } else {
+        unregister_code(KC_LGUI);
+        unregister_code(KC_BSPC);
+      }
+
       break;
 
     case RGB_MOD:

@@ -117,7 +117,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     case PWDME:
       if (record->event.pressed) {
-        send_string_with_delay_P(PSTR(CPWDME), SEND_STR_DELAY);
+        send_string_with_delay_P(PSTR(CPWDME SS_TAP(X_ENT)), SEND_STR_DELAY);
       }
       break;
 
