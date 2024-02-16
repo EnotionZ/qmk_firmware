@@ -18,6 +18,7 @@ enum custom_keycodes {
   PWDEV,
   TD_LWRC,
   VSCLOSE,
+  VSCLALL,
 };
 
 #define TGMAC   TG(_MAC)
@@ -46,15 +47,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_LOWER] = LAYOUT(
       KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,        KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    _______, _______,
-      KC_TAB,  PWDEV,   VSCLOSE, KC_INS,  KC_ENT,  PWD1P,       _______, KC_LCBR, KC_RCBR, KC_LBRC, KC_RBRC, _______,
-      KC_TRNS, KC_BSPC, KC_DEL,  KC_BTN1, PWDME,   PWDAA,       _______, _______, KC_MINS, KC_EQL,  KC_UNDS, _______, _______,
+      KC_TAB,  PWDEV,   KC_BTN1, KC_INS,  KC_ENT,  PWD1P,       _______, KC_LCBR, KC_RCBR, KC_LBRC, KC_RBRC, _______,
+      KC_TRNS, KC_BSPC, KC_DEL,  VSCLOSE, PWDME,   PWDAA,       _______, _______, KC_MINS, KC_EQL,  KC_UNDS, _______, _______,
       _______, _______,          LOWER,   KC_SPC,                        _______, RAISE,                     _______, _______
   ),
 
   [_RAISE] = LAYOUT(
       KC_GRV,  KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,     KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, _______, KC_DEL,
       _______, _______, _______, _______, _______, _______,     KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_QUOT, _______,
-      _______, _______, _______, _______, _______, _______,     _______, KC_MPLY, KC_VOLD, KC_VOLU, KC_MPRV, KC_MNXT, KC_MUTE,
+      _______, _______, _______, VSCLALL, _______, _______,     _______, KC_MPLY, KC_VOLD, KC_VOLU, KC_MPRV, KC_MNXT, KC_MUTE,
       _______, _______,          LOWER,   KC_SPC,                        _______, RAISE,                     _______, _______
   ),
 
@@ -202,6 +203,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         tap_code(KC_W);
         unregister_code(KC_LCTL);
         tap_code(KC_Q);
+      }
+      break;
+
+    case VSCLALL:
+      if(record->event.pressed) {
+        register_code(KC_LCTL);
+        tap_code(KC_K);
+        unregister_code(KC_LCTL);
+        tap_code(KC_W);
       }
       break;
 
