@@ -12,9 +12,9 @@ enum layers {
 
 enum custom_keycodes {
   PWD1P = SAFE_RANGE,
-  PWDAA,
   PWDME,
   PWDEV,
+  EMAIL,
   TD_LWRA,
   TD_RSEG,
   CTL_ALT,
@@ -54,13 +54,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_LOWER] = LAYOUT(
       KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,        KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    _______,
       KC_TAB,  PWDEV,   KC_BTN1, KC_INS,  KC_ENT,  PWD1P,       _______, KC_LCBR, KC_RCBR, KC_LBRC, KC_RBRC, _______,
-      KC_TRNS, KC_BSPC, KC_DEL,  VSCLOSE, PWDME,   PWDAA,       KC_RCTL, KC_MINS, KC_EQL,  KC_UNDS, KC_PLUS, _______,
+      KC_TRNS, KC_BSPC, KC_DEL,  VSCLOSE, PWDME,   EMAIL,       KC_RCTL, KC_MINS, KC_EQL,  KC_UNDS, KC_PLUS, _______,
                         _______, _______, KC_SPC,  _______,     _______, KC_BSPC, _______, _______
   ),
 
   [_RAISE] = LAYOUT(
       KC_GRV,  KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,     KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_DEL,
-      _______, _______, _______, _______, KC_BTN1, _______,     KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_QUOT, TGCTL,
+      _______, _______, _______, _______, KC_BTN1, EMAIL,       KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_QUOT, TGCTL,
       _______, _______, _______, VSCLALL, _______, _______,     KC_MPLY, KC_VOLD, KC_VOLU, KC_MPRV, KC_MNXT, KC_MUTE,
                         _______, _______, KC_SPC,  _______,     _______, KC_BSPC, _______, _______
   ),
@@ -158,12 +158,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       break;
 
-    case PWDAA:
-      if (keydown) {
-        send_string_with_delay_P(PSTR(CPWDAA SS_TAP(X_ENT)), SEND_STR_DELAY);
-      }
-      break;
-
     case PWDME:
       if (keydown) {
         send_string_with_delay_P(PSTR(CPWDME SS_TAP(X_ENT)), SEND_STR_DELAY);
@@ -173,6 +167,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case PWDEV:
       if (keydown) {
         send_string_with_delay_P(PSTR(CPWDEV SS_TAP(X_ENT)), SEND_STR_DELAY);
+      }
+      break;
+
+    case EMAIL:
+      if (keydown) {
+        send_string_with_delay_P(PSTR(EMAILSTR), 5);
       }
       break;
 
@@ -251,8 +251,6 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
     if(pointerDivisor < 1) pointerDivisor = 1;
   } else if (layer_state_is(_RAISE)) {
     tap_code(clockwise ? KC_BRIGHTNESS_UP : KC_BRIGHTNESS_DOWN);
-  } else if(isGuiDown) {
-    tap_code(clockwise ? KC_PAUSE : KC_SCROLLLOCK); // OSX screen brightness
   } else if(isRshiftDown) {
     if(clockwise) {
       rgblight_increase_val();
