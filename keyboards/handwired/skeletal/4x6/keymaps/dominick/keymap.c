@@ -48,7 +48,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       _______, _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______, _______,
       KC_TAB,  _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______, _______,
       _______, _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______, _______,
-                        _______, TD_LWRA, _______, CTL_ALT,     KC_RALT, _______, TD_RSEG, _______
+                        _______, _______, _______, CTL_ALT,     KC_RALT, _______, _______, _______
   ),
 
   [_LOWER] = LAYOUT(
@@ -67,7 +67,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_ADJUST] = LAYOUT(
       _______, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,       KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  RESET,
-      _______, KC_PSCR, KC_SCRL, KC_PAUS, KC_INS,  KC_F11,      KC_F12,  KC_PGDN, KC_PGUP, RGB_MOD, _______, RGB_TOG,
+      TGCTL,   KC_PSCR, KC_SCRL, KC_PAUS, KC_INS,  KC_F11,      KC_F12,  KC_PGDN, KC_PGUP, RGB_MOD, _______, RGB_TOG,
       KC_CAPS, _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______, TGMAC,
                         _______, _______, KC_SPC,  _______,     _______, KC_BSPC, _______, _______
   ),
