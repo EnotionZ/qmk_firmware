@@ -4,6 +4,7 @@
 enum layers {
   _QWERTY = 0,
   _MAC,
+  _CTL,
   _LOWER,
   _RAISE,
   _ADJUST,
@@ -14,17 +15,18 @@ enum custom_keycodes {
   PWDAA,
   PWDME,
   PWDEV,
-  LWR_GUI,
-  TD_LWRC,
+  TD_LWRA,
+  TD_RSEG,
+  CTL_ALT,
   VSCLOSE,
   VSCLALL,
 };
 
 #define TGMAC   TG(_MAC)
+#define TGCTL   TG(_CTL)
 #define LOWER   MO(_LOWER)
 #define RAISE   MO(_RAISE)
 #define ADJUST  MO(_ADJUST)
-#define GUIBSPC MT(MOD_RGUI, KC_BSPC)
 #define CTLTAB  MT(MOD_LCTL, KC_TAB)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -32,35 +34,42 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_GESC, KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,        KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSLS,
       CTLTAB,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,        KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_ENT,
       KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,        KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
-                        KC_MUTE, TD_LWRC, KC_SPC,  KC_LALT,     KC_LGUI, KC_BSPC, RAISE,   _______
+                        KC_MUTE, LOWER,   KC_SPC,  KC_LALT,     KC_LGUI, KC_BSPC, RAISE,   _______
   ),
 
   [_MAC] = LAYOUT(
       _______, _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______, _______,
       _______, _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______, _______,
       _______, _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______, _______,
-                        _______, _______, _______,  KC_LGUI,    KC_LALT, _______, _______, _______
+                        _______, _______, _______, KC_LGUI,     KC_LALT, _______, _______, _______
+  ),
+
+  [_CTL] = LAYOUT(
+      _______, _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______, _______,
+      KC_TAB,  _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______, _______,
+      _______, _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______, _______,
+                        _______, TD_LWRA, _______, CTL_ALT,     KC_RALT, _______, TD_RSEG, _______
   ),
 
   [_LOWER] = LAYOUT(
       KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,        KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    _______,
       KC_TAB,  PWDEV,   KC_BTN1, KC_INS,  KC_ENT,  PWD1P,       _______, KC_LCBR, KC_RCBR, KC_LBRC, KC_RBRC, _______,
       KC_TRNS, KC_BSPC, KC_DEL,  VSCLOSE, PWDME,   PWDAA,       KC_RCTL, KC_MINS, KC_EQL,  KC_UNDS, KC_PLUS, _______,
-                        _______, TD_LWRC, KC_SPC,  _______,     _______, KC_BSPC, RAISE,   _______
+                        _______, _______, KC_SPC,  _______,     _______, KC_BSPC, _______, _______
   ),
 
   [_RAISE] = LAYOUT(
       KC_GRV,  KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,     KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_DEL,
-      _______, _______, _______, _______, KC_BTN1, _______,     KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_QUOT, _______,
+      _______, _______, _______, _______, KC_BTN1, _______,     KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_QUOT, TGCTL,
       _______, _______, _______, VSCLALL, _______, _______,     KC_MPLY, KC_VOLD, KC_VOLU, KC_MPRV, KC_MNXT, KC_MUTE,
-                        _______, TD_LWRC, KC_SPC,  _______,     _______, KC_BSPC, RAISE,   _______
+                        _______, _______, KC_SPC,  _______,     _______, KC_BSPC, _______, _______
   ),
 
   [_ADJUST] = LAYOUT(
       _______, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,       KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  RESET,
       _______, KC_PSCR, KC_SCRL, KC_PAUS, KC_INS,  KC_F11,      KC_F12,  KC_PGDN, KC_PGUP, RGB_MOD, _______, RGB_TOG,
       KC_CAPS, _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______, TGMAC,
-                        _______, TD_LWRC, KC_SPC,  _______,     _______, KC_BSPC, RAISE,   _______
+                        _______, _______, KC_SPC,  _______,     _______, KC_BSPC, _______, _______
   ),
 };
 
@@ -167,12 +176,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       break;
 
-    case TD_LWRC:
-      handle_tapdance(record, LOWER, true, KC_LCTL, false);
+    case TD_LWRA:
+      handle_tapdance(record, LOWER, true, KC_LALT, false);
       break;
 
-    case LWR_GUI:
-      handle_tapdance(record, _LOWER, true, KC_LGUI, false);
+    case TD_RSEG:
+      handle_tapdance(record, RAISE, true, KC_RGUI, false);
+      break;
+
+    case CTL_ALT:
+      handle_tapdance(record, KC_LCTL, false, KC_LALT, false);
       break;
 
     case KC_LSFT:;
