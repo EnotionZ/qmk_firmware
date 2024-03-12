@@ -15,9 +15,8 @@ enum custom_keycodes {
   PWDME,
   PWDEV,
   EMAIL,
-  TD_LWRA,
-  TD_RSEG,
   CTL_ALT,
+  ALT_GUI,
   VSCLOSE,
   VSCLALL,
 };
@@ -48,7 +47,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       _______, _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______, _______,
       KC_TAB,  _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______, _______,
       _______, _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______, _______,
-                        _______, _______, _______, CTL_ALT,     KC_RALT, _______, _______, _______
+                        _______, _______, _______, CTL_ALT,     ALT_GUI, _______, _______, _______
   ),
 
   [_LOWER] = LAYOUT(
@@ -176,16 +175,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       break;
 
-    case TD_LWRA:
-      handle_tapdance(record, LOWER, true, KC_LALT, false);
-      break;
-
-    case TD_RSEG:
-      handle_tapdance(record, RAISE, true, KC_RGUI, false);
-      break;
-
     case CTL_ALT:
       handle_tapdance(record, KC_LCTL, false, KC_LALT, false);
+      break;
+
+    case ALT_GUI:
+      handle_tapdance(record, KC_RALT, false, KC_RGUI, false);
       break;
 
     case KC_LSFT:;
