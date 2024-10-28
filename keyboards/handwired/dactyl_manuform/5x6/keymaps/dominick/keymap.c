@@ -12,7 +12,7 @@ enum layers {
 
 enum custom_keycodes {
   PWD1P = SAFE_RANGE,
-  PWDAA,
+  EMAIL,
   PWDME,
   PWDEV,
   CTLTB,
@@ -38,7 +38,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                        KC_LGUI, KC_LALT,                                           KC_RALT, KC_RGUI,
                                          LOWER,   KC_TRNS,       KC_TRNS, RAISE,
                                          KC_SPC,  KC_MUTE,       KC_EQL,  KC_BSPC,
-                                         KC_RGUI, KC_LCTL,       KC_MINS, KC_DEL
+                                         KC_RALT, KC_LCTL,       KC_MINS, KC_DEL
   ),
 
   [_MAC] = LAYOUT_5x6(
@@ -49,7 +49,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                        KC_LALT, KC_LGUI,                                           KC_RGUI, KC_RALT,
                                          _______, _______,       _______, _______,
                                          _______, _______,       _______, _______,
-                                         _______, _______,       _______, _______
+                                         KC_RGUI, _______,       _______, _______
   ),
 
   [_FN] = LAYOUT_5x6(
@@ -68,7 +68,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      KC_F11,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,         KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F12,
      KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,          KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    _______,
      KC_TAB,  PWDEV,   MACDEL,  KC_INS,  KC_ENT,  PWD1P,         _______, KC_LCBR, KC_RCBR, KC_LBRC, KC_RBRC, _______,
-     KC_TRNS, KC_BSPC, KC_DEL,  VSCLOSE, PWDME,   PWDAA,         _______, KC_MINS, KC_EQL,  KC_UNDS, KC_PLUS, _______,
+     KC_TRNS, KC_BSPC, KC_DEL,  VSCLOSE, PWDME,   EMAIL,         _______, KC_MINS, KC_EQL,  KC_UNDS, KC_PLUS, _______,
                        _______, _______,                                           _______, _______,
                                          _______, KC_TRNS,       KC_TRNS, _______,
                                          _______, _______,       _______, KC_SPC,
@@ -90,11 +90,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      _______, _______, _______, _______, _______, _______,       _______, _______, _______, _______, _______, RESET,
      _______, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,         KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  _______,
      _______, KC_PSCR, KC_SCRL, KC_PAUS, KC_INS,  KC_F11,        KC_F12,  KC_PGDN, KC_PGUP, _______, _______, TGFN,
-     KC_CAPS, _______, _______, _______, _______, _______,       _______, _______, _______, _______, _______, TGMAC,
+     KC_CAPS, _______, _______, _______, _______, _______,       _______, _______, _______, _______, _______, _______,
                        _______, _______,                                           _______, _______,
                                          _______, _______,       _______, _______,
                                          _______, _______,       _______, _______,
-                                         _______, _______,       _______, _______
+                                         TGMAC,   _______,       _______, _______
   ),
 };
 
@@ -155,9 +155,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       break;
 
-    case PWDAA:
+    case EMAIL:
       if (record->event.pressed) {
-        send_string_with_delay_P(PSTR(CPWDAA SS_TAP(X_ENT)), SEND_STR_DELAY);
+        send_string_with_delay_P(PSTR(EMAIL_STR SS_TAP(X_ENT)), SEND_STR_DELAY);
       }
       break;
 
