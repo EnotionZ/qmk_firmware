@@ -20,8 +20,15 @@ shared.h
 *.lst
 *.map
 *.o
+*.a
+*.so
+*.dylib
+*.dll
+*.la
 *.stackdump
 *.sym
+index.html
+firmware_list.json
 
 # QMK-specific
 api_data/v1
@@ -31,6 +38,10 @@ quantum/version.h
 *.hex
 *.qmk
 *.uf2
+
+# DD config at wrong location
+/keyboards/**/keymaps/*/info.json
+/keyboards/**/keymaps/*/keyboard.json
 
 # Old-style QMK Makefiles
 /keyboards/**/Makefile
@@ -47,7 +58,6 @@ quantum/version.h
 .idea/
 .project
 .settings/
-.vagrant/
 
 # ?
 .dep
@@ -55,6 +65,8 @@ quantum/version.h
 build/
 cmake-build-debug
 CMakeLists.txt
+*.pdf
+*.zip
 
 # Let these ones be user specific, since we have so many different configurations
 *.code-workspace
@@ -69,9 +81,20 @@ CMakeLists.txt
 tags
 
 # Ignore image/font files
+*.bmp
+*.wbmp
 *.gif
 *.jpg
+*.jpeg
 *.png
+*.apng
+*.mng
+*.svg
+*.webp
+*.webm
+*.avi
+*.mp4
+*.mpeg
 *.ttf
 *.otf
 
@@ -83,6 +106,7 @@ secrets.tar
 # Python things
 __pycache__
 .python-version
+.venv
 
 # Prerequisites for updating ChibiOS
 /util/fmpp*
@@ -95,5 +119,7 @@ compile_commands.json
 .clangd/
 .cache/
 
-# VIA(L) json files that don't belong in QMK repo
+# VIA(L) files that don't belong in QMK repo
 via*.json
+/keyboards/**/keymaps/via/*
+/keyboards/**/keymaps/vial/*
