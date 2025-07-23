@@ -21,15 +21,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define USE_SERIAL
 
-// #define MASTER_LEFT
 #define MASTER_LEFT
 //#define EE_HANDS
 
-#define SEND_STR_DELAY 15
+#define SEND_STR_DELAY 5
 
 // https://deskthority.net/wiki/Arduino_Pro_Micro
 // use AVR names
-#define ENCODERS_PAD_A { F5 }
-#define ENCODERS_PAD_B { F4 }
-
-// #define RGBLIGHT_ANIMATIONS
+#define ENCODER_A_PINS { F5 }
+#define ENCODER_B_PINS { F4 }
+#define ENCODER_RESOLUTION 4
