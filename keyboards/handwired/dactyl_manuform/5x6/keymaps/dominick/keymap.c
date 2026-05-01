@@ -29,6 +29,77 @@ enum custom_keycodes {
 #define ADJUST MO(_ADJUST)
 #define CTLTAB MT(MOD_LCTL, KC_TAB)
 
+#ifndef ADJUST_RAPID_FIRE_INTERVAL_MS
+#define ADJUST_RAPID_FIRE_INTERVAL_MS 45
+#endif
+#ifndef ADJUST_RAPID_MAX_KEYS
+#define ADJUST_RAPID_MAX_KEYS 8
+#endif
+
+typedef struct {
+    uint16_t keycode;
+    uint16_t last_tap;
+} adjust_rapid_slot_t;
+
+static adjust_rapid_slot_t adjust_rapid_slots[ADJUST_RAPID_MAX_KEYS];
+
+static bool adjust_rapid_eligible(uint16_t keycode) {
+    if (keycode == KC_NO || keycode == KC_TRNS) {
+        return false;
+    }
+    if (IS_QUANTUM_KEYCODE(keycode)) {
+        return false;
+    }
+    if (keycode >= SAFE_RANGE) {
+        return false;
+    }
+    return IS_BASIC_KEYCODE(keycode) || IS_MODIFIER_KEYCODE(keycode) || IS_SYSTEM_KEYCODE(keycode) || IS_CONSUMER_KEYCODE(keycode) || IS_MOUSE_KEYCODE(keycode);
+}
+
+static void adjust_rapid_clear(void) {
+    for (uint8_t i = 0; i < ADJUST_RAPID_MAX_KEYS; i++) {
+        adjust_rapid_slots[i].keycode = KC_NO;
+    }
+}
+
+static void adjust_rapid_register(uint16_t keycode) {
+    for (uint8_t i = 0; i < ADJUST_RAPID_MAX_KEYS; i++) {
+        if (adjust_rapid_slots[i].keycode == keycode) {
+            adjust_rapid_slots[i].last_tap = timer_read();
+            return;
+        }
+    }
+    for (uint8_t i = 0; i < ADJUST_RAPID_MAX_KEYS; i++) {
+        if (adjust_rapid_slots[i].keycode == KC_NO) {
+            adjust_rapid_slots[i].keycode = keycode;
+            adjust_rapid_slots[i].last_tap = timer_read();
+            return;
+        }
+    }
+}
+
+static void adjust_rapid_unregister(uint16_t keycode) {
+    for (uint8_t i = 0; i < ADJUST_RAPID_MAX_KEYS; i++) {
+        if (adjust_rapid_slots[i].keycode == keycode) {
+            adjust_rapid_slots[i].keycode = KC_NO;
+        }
+    }
+}
+
+static void adjust_rapid_tick(void) {
+    uint16_t now = timer_read();
+    for (uint8_t i = 0; i < ADJUST_RAPID_MAX_KEYS; i++) {
+        uint16_t kc = adjust_rapid_slots[i].keycode;
+        if (kc == KC_NO) {
+            continue;
+        }
+        if (timer_elapsed(adjust_rapid_slots[i].last_tap) >= ADJUST_RAPID_FIRE_INTERVAL_MS) {
+            tap_code16(kc);
+            adjust_rapid_slots[i].last_tap = now;
+        }
+    }
+}
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_QWERTY] = LAYOUT_5x6(
@@ -111,6 +182,11 @@ void matrix_scan_user(void) {
   if (rapid_fire) {
     tap_code(MS_BTN1);
   }
+  if (layer_state_is(_ADJUST)) {
+    adjust_rapid_tick();
+  } else {
+    adjust_rapid_clear();
+  }
 }
 
 bool encoder_update_user(uint8_t index, bool clockwise) {
@@ -131,6 +207,15 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
 /* }; */
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  if (layer_state_is(_ADJUST) && adjust_rapid_eligible(keycode)) {
+    if (record->event.pressed) {
+      tap_code16(keycode);
+      adjust_rapid_register(keycode);
+    } else {
+      adjust_rapid_unregister(keycode);
+    }
+    return false;
+  }
 
   switch (keycode) {
     case CTLTB:
