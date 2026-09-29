@@ -3,7 +3,7 @@
 
 enum layers {
   _QWERTY = 0,
-  _MAC,
+  _WIN,
   _FN,
   _LOWER,
   _RAISE,
@@ -17,12 +17,12 @@ enum custom_keycodes {
   PWDEV,
   CTLTB,
   MACDEL,
-  VSCLOSE,
   VSCLALL,
   FASTCLK,
+  CMDNEW,
 };
 
-#define TGMAC  TG(_MAC)
+#define TGWIN  TG(_WIN)
 #define TGFN   TG(_FN)
 #define LOWER  MO(_LOWER)
 #define RAISE  MO(_RAISE)
@@ -107,21 +107,21 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,          KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSLS,
      KC_RCTL, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,          KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_ENT,
      KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,          KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
-                       KC_LGUI, KC_LALT,                                           KC_RALT, KC_RGUI,
+                       KC_LALT, KC_LGUI,                                           KC_RALT, KC_RGUI,
                                          LOWER,   KC_TRNS,       KC_TRNS, RAISE,
                                          KC_SPC,  KC_MUTE,       MS_BTN1, KC_BSPC,
-                                         KC_RALT, KC_LCTL,       KC_MINS, KC_DEL
+                                         KC_RGUI, KC_LCTL,       KC_MINS, KC_DEL
   ),
 
-  [_MAC] = LAYOUT_5x6(
+  [_WIN] = LAYOUT_5x6(
      _______, _______, _______, _______, _______, _______,       _______, _______, _______, _______, _______, _______,
      _______, _______, _______, _______, _______, _______,       _______, _______, _______, _______, _______, _______,
      _______, _______, _______, _______, _______, _______,       _______, _______, _______, _______, _______, _______,
      _______, _______, _______, _______, _______, _______,       _______, _______, _______, _______, _______, _______,
-                       KC_LALT, KC_LGUI,                                           KC_RGUI, KC_RALT,
+                       KC_LGUI, KC_LALT,                                           KC_RGUI, KC_RALT,
                                          _______, _______,       _______, _______,
                                          _______, _______,       _______, _______,
-                                         KC_RGUI, _______,       _______, _______
+                                         KC_RALT, _______,       _______, _______
   ),
 
   [_FN] = LAYOUT_5x6(
@@ -140,11 +140,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      KC_F11,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,         KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F12,
      KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,          KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    _______,
      KC_TAB,  PWDEV,   MACDEL,  KC_INS,  KC_ENT,  PWD1P,         _______, KC_LCBR, KC_RCBR, KC_LBRC, KC_RBRC, _______,
-     KC_TRNS, KC_BSPC, KC_DEL,  VSCLOSE, PWDME,   EMAIL,         _______, KC_MINS, KC_EQL,  KC_UNDS, KC_PLUS, _______,
+     KC_TRNS, KC_BSPC, KC_DEL,  LGUI(LALT(KC_C)), CMDNEW,  EMAIL,         _______, KC_MINS, KC_EQL,  KC_UNDS, KC_PLUS, _______,
                        _______, _______,                                           _______, _______,
                                          _______, KC_TRNS,       KC_TRNS, _______,
                                          _______, _______,       _______, KC_SPC,
-                                         _______, _______,       _______, _______
+                                         _______, _______,       KC_PLUS, _______
   ),
 
   [_RAISE] = LAYOUT_5x6(
@@ -166,7 +166,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                        _______, _______,                                           _______, _______,
                                          _______, KC_TRNS,       KC_TRNS, _______,
                                          _______, _______,       _______, _______,
-                                         TGMAC,   _______,       _______, _______
+                                         TGWIN,   _______,       _______, _______
   ),
 };
 
@@ -253,24 +253,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       break;
 
-    case PWDME:
+    case CMDNEW:
       if (record->event.pressed) {
-        send_string_with_delay_P(PSTR(CPWDME SS_TAP(X_ENT)), SEND_STR_DELAY);
+        tap_code16(LGUI(KC_N));
       }
       break;
 
     case PWDEV:
       if (record->event.pressed) {
         send_string_with_delay_P(PSTR(CPWDEV SS_TAP(X_ENT)), SEND_STR_DELAY);
-      }
-      break;
-
-    case VSCLOSE:
-      if(record->event.pressed) {
-        register_code(KC_LCTL);
-        tap_code(KC_W);
-        unregister_code(KC_LCTL);
-        tap_code(KC_Q);
       }
       break;
 
